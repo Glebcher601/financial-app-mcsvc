@@ -1,0 +1,14 @@
+job:
+  properties:
+    api:
+      url:
+      key:
+    symbols:
+      - MSFT
+      - AAPL
+    interval:
+      - 15min
+    function:
+      - TIME_SERIES_INTRADAY
+    outputsize:
+      - full
