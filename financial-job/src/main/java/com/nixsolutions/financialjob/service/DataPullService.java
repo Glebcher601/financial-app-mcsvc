@@ -1,9 +1,8 @@
 package com.nixsolutions.financialjob.service;
 
-import java.util.List;
-import com.nixsolutions.financial.domain.StockSnapshot;
+import com.nixsolutions.financial.domain.SymbolStockSnapshots;
 
 public interface DataPullService
 {
-  List<StockSnapshot> pullSnapshotsForSymbol(String symbol);
+  SymbolStockSnapshots pullSnapshotsForSymbol(String symbol);
 }

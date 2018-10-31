@@ -1,15 +1,14 @@
 package com.nixsolutions.financial.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-
 import java.io.Serializable;
 import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
 @Data
 public class StockSnapshot implements Serializable {
 
-  private long id;
+  private Long id;
 
   private Date timeStamp;
 

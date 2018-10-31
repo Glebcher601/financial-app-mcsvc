@@ -1,33 +1,26 @@
 package com.nixsolutions.financialjob.service;
 
-import static com.nixsolutions.financialjob.configuration.ApiUrlConfiguration.UriParams.SYMBOL;
 import static java.util.Spliterator.ORDERED;
-import java.net.URI;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Spliterators;
-import java.util.TimeZone;
 import java.util.stream.StreamSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpMethod;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.nixsolutions.financial.domain.StockSnapshot;
-import com.nixsolutions.financialjob.configuration.ApiUrlConfiguration;
+import com.nixsolutions.financial.domain.SymbolStockSnapshots;
 
 @Service
 public class AlphaVintageDataPullService implements DataPullService
@@ -35,34 +28,42 @@ public class AlphaVintageDataPullService implements DataPullService
   private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
   private ObjectMapper objectMapper = new ObjectMapper();
 
+  private final String templateUri;
+
   @Autowired
-  @Qualifier("prefilledTemplateUrl")
-  private String templateUri;
+  public AlphaVintageDataPullService(@Qualifier("prefilledTemplateUrl") String templateUri)
+  {
+    this.templateUri = templateUri;
+  }
 
   @Override
-  public List<StockSnapshot> pullSnapshotsForSymbol(String symbol)
+  public SymbolStockSnapshots pullSnapshotsForSymbol(String symbol)
   {
     String uriString = UriComponentsBuilder.fromHttpUrl(templateUri)
         .buildAndExpand(symbol)
         .toUriString();
 
-    WebClient.create(uriString).method(HttpMethod.GET)
+    List<StockSnapshot> stockSnapshots = WebClient.create(uriString).method(HttpMethod.GET)
         .retrieve()
         .bodyToMono(JsonNode.class)
         .map(this::getStockSnapShots)
         .map(this::toEntityList)
         .block();
 
-    return null;
+    SymbolStockSnapshots symbolStockSnapshots = new SymbolStockSnapshots();
+    symbolStockSnapshots.setSymbol(symbol);
+    symbolStockSnapshots.setSnapshots(stockSnapshots);
+
+    return symbolStockSnapshots;
   }
 
   private ObjectNode getStockSnapShots(JsonNode jsonNode)
   {
-    Optional<Map.Entry<String, JsonNode>> nodeEntry = StreamSupport.stream(Spliterators.spliteratorUnknownSize(jsonNode
-        .fields(), ORDERED), false)
+    Optional<Map.Entry<String, JsonNode>> snapshotsNode =
+        StreamSupport.stream(Spliterators.spliteratorUnknownSize(jsonNode.fields(), ORDERED), false)
         .reduce((first, second) -> second);
 
-    return nodeEntry
+    return snapshotsNode
         .map(Map.Entry::getValue)
         .map(node -> (ObjectNode) node)
         .orElseThrow(RuntimeException::new);

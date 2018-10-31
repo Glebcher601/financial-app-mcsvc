@@ -15,13 +15,16 @@ public class BatchConfig extends DefaultBatchConfigurer
 {
 
   @Override
-  @Autowired
-  public void setDataSource(@Qualifier("springBatchDataSource") DataSource dataSource) {
-    // If we don't provide a datasource, an in-memory map will be used.
+  public void setDataSource(@Autowired
+                            @Qualifier("springBatchDataSource") DataSource dataSource)
+  {
+    //super.setDataSource(dataSource);
+    // If we don't provide a datasource, an in-memory db will be used
   }
 
   @Bean(name = "springBatchDataSource")
-  public DataSource springBatchDataSource() {
+  public DataSource springBatchDataSource()
+  {
     DriverManagerDataSource dataSource = new DriverManagerDataSource();
 
     dataSource.setDriverClassName("org.h2.Driver");

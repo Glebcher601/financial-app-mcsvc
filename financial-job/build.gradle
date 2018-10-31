@@ -27,9 +27,11 @@ repositories {
 
 dependencies {
 	compile("com.nixsolutions:financial-domain-common:1.0-SNAPSHOT")
+	compile group: 'commons-collections', name: 'commons-collections', version: '3.2.1'
+	compile group: 'com.google.guava', name: 'guava', version: '27.0-jre'
+	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
+
 	runtime group: 'com.h2database', name: 'h2', version: '1.4.197'
-
-
 	implementation('org.springframework.boot:spring-boot-starter-actuator')
 	implementation('org.springframework.boot:spring-boot-starter-batch')
 	implementation('org.springframework.boot:spring-boot-starter-web')
@@ -38,6 +40,7 @@ dependencies {
 	runtimeOnly('org.springframework.boot:spring-boot-devtools')
 	compileOnly('org.projectlombok:lombok')
 
+	testCompile group: 'com.squareup.okhttp3', name: 'mockwebserver', version: '3.2.0'
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
 	testImplementation('org.springframework.batch:spring-batch-test')
 }

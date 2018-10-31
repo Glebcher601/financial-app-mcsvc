@@ -9,3 +9,6 @@ job:
       interval: 1min
       function: TIME_SERIES_INTRADAY
       outputsize: compact
+loggig:
+  level:
+    com.nixsolutions: DEBUG
