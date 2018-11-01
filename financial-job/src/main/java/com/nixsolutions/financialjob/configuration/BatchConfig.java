@@ -1,27 +1,20 @@
 package com.nixsolutions.financialjob.configuration;
 
 import javax.sql.DataSource;
-import org.springframework.batch.core.configuration.annotation.DefaultBatchConfigurer;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.batch.core.partition.PartitionHandler;
+import org.springframework.batch.core.partition.support.TaskExecutorPartitionHandler;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 @Configuration
 @EnableBatchProcessing
-public class BatchConfig extends DefaultBatchConfigurer
+public class BatchConfig
 {
-
-  @Override
-  public void setDataSource(@Autowired
-                            @Qualifier("springBatchDataSource") DataSource dataSource)
-  {
-    //super.setDataSource(dataSource);
-    // If we don't provide a datasource, an in-memory db will be used
-  }
-
   @Bean(name = "springBatchDataSource")
   public DataSource springBatchDataSource()
   {
@@ -33,5 +26,24 @@ public class BatchConfig extends DefaultBatchConfigurer
     dataSource.setPassword("sa");
 
     return dataSource;
+  }
+
+
+  @Bean
+  public TaskExecutor taskExecutor()
+  {
+    return new SimpleAsyncTaskExecutor();
+  }
+
+  @Bean
+  public PartitionHandler multiThreadPartitionHandler(@Value("${job.properties.threads}") Integer threadsCount,
+                                                      TaskExecutor taskExecutor)
+  {
+    TaskExecutorPartitionHandler partitionHandler = new TaskExecutorPartitionHandler();
+
+    partitionHandler.setTaskExecutor(taskExecutor);
+    partitionHandler.setGridSize(threadsCount);
+
+    return partitionHandler;
   }
 }

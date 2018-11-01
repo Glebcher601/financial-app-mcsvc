@@ -9,17 +9,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class JobListener implements JobExecutionListener
 {
-  private static final Logger LOG = LoggerFactory.getLogger(javax.batch.api.listener.JobListener.class);
+  private static final Logger LOG = LoggerFactory.getLogger(JobListener.class);
 
   @Override
   public void beforeJob(JobExecution jobExecution)
   {
-    LOG.debug("Job " + jobExecution.getJobConfigurationName() + "started at: " + jobExecution.getStartTime());
   }
 
   @Override
   public void afterJob(JobExecution jobExecution)
   {
-    LOG.debug("Job " + jobExecution.getJobConfigurationName() + "finished at: " + jobExecution.getEndTime());
+    //LOG.debug("Job " + jobExecution + "finished at: " + jobExecution.getEndTime());
   }
 }

@@ -1,5 +1,6 @@
 package com.nixsolutions.financialjob.configuration;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static com.nixsolutions.financialjob.configuration.ApiUrlConfiguration.UriParams.API_KEY;
 import static com.nixsolutions.financialjob.configuration.ApiUrlConfiguration.UriParams.FUNCTION;
 import static com.nixsolutions.financialjob.configuration.ApiUrlConfiguration.UriParams.INTERVAL;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.nixsolutions.financial.domain.SymbolStockSnapshots;
+import com.nixsolutions.financialjob.job.JobListener;
 import com.nixsolutions.financialjob.job.ListDataSplitter;
 import com.nixsolutions.financialjob.service.DataPullService;
 
@@ -39,9 +41,6 @@ public class DataPullJobConfiguration
   @Bean
   public String prefilledTemplateUrl(ApiUrlConfiguration apiProps)
   {
-    LOG.debug("Initializing api url");
-
-
     return apiProps.getTemplateUrl()
         .replace("{" + API_KEY + "}", apiProps.getKey())
         .replace("{" + FUNCTION + "}", apiProps.getFunction())
@@ -49,7 +48,9 @@ public class DataPullJobConfiguration
   }
 
   @Bean
-  public Job dataPull(PullStepConfiguration pullStepConfiguration, Step slaveStep)
+  public Job dataPull(PullStepConfiguration pullStepConfiguration,
+                      Step slaveStep,
+                      JobListener jobListener)
   {
     Step pullStep = steps.get("pullData")
         .partitioner("slaveStep", pullStepConfiguration.symbolPartitioner(null, null))
@@ -57,6 +58,7 @@ public class DataPullJobConfiguration
         .build();
 
     return jobs.get("dataPullJob")
+        .listener(jobListener)
         .start(pullStep)
         .build();
   }
@@ -89,17 +91,19 @@ public class DataPullJobConfiguration
   }
 
   @Bean
+  @StepScope
   public ItemProcessor<String, SymbolStockSnapshots> symbolProcessor(DataPullService dataPullService)
   {
     return dataPullService::pullSnapshotsForSymbol;
   }
 
   @Bean
+  @StepScope
   public ItemWriter<SymbolStockSnapshots> stockSnapshotsWriter()
   {
     return items ->
     {
-      LOG.debug("Written items");
+      LOG.debug("Written snapshot items for symbol: " + items.get(0).getSymbol());
       //TODO write to stock service
     };
   }
@@ -109,9 +113,10 @@ public class DataPullJobConfiguration
   {
 
     @Bean
+    @StepScope
     public Partitioner symbolPartitioner(ApiUrlConfiguration apiUrlProps, ListDataSplitter listDataSplitter)
     {
-      return gridSize -> listDataSplitter.splitData(apiUrlProps.getSymbols(), gridSize);
+      return gridSize -> listDataSplitter.splitData(newArrayList(apiUrlProps.getSymbols()), gridSize);
     }
   }
 }
