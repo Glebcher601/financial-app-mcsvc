@@ -9,3 +9,4 @@ job:
       interval: 1min
       function: TIME_SERIES_INTRADAY
       outputsize: compact
+    cron: 0 0 12/24 ? * * *
