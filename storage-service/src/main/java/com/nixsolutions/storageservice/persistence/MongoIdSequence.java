@@ -1,11 +1,11 @@
 package com.nixsolutions.storageservice.persistence;
 
-import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
+import lombok.Data;
 
 @Data
-@Document("mongo_counter")
-public class MongoCounter
+@Document("sequence")
+public class MongoIdSequence
 {
   private String name;
 

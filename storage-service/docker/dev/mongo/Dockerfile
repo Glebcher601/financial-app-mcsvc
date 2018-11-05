@@ -1,2 +1,2 @@
 FROM mongo:3.4
-EXPOSE 27017
+COPY initial-seed.js /docker-entrypoint-initdb.d/

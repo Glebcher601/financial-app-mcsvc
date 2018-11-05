@@ -4,6 +4,7 @@ import static java.util.Spliterator.ORDERED;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -19,8 +20,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.nixsolutions.financial.domain.StockSnapshot;
-import com.nixsolutions.financial.domain.SymbolStockSnapshots;
+import com.nixsolutions.financial.domain.SymbolStockSnapshotsBase;
+import com.nixsolutions.financialjob.domain.StockSnapshot;
 
 @Service
 public class AlphaVintageDataPullService implements DataPullService
@@ -37,7 +38,7 @@ public class AlphaVintageDataPullService implements DataPullService
   }
 
   @Override
-  public SymbolStockSnapshots pullSnapshotsForSymbol(String symbol)
+  public SymbolStockSnapshotsBase pullSnapshotsForSymbol(String symbol)
   {
     String uriString = UriComponentsBuilder.fromHttpUrl(templateUri)
         .buildAndExpand(symbol)
@@ -50,9 +51,9 @@ public class AlphaVintageDataPullService implements DataPullService
         .map(this::toEntityList)
         .block();
 
-    SymbolStockSnapshots symbolStockSnapshots = new SymbolStockSnapshots();
+    SymbolStockSnapshotsBase symbolStockSnapshots = new SymbolStockSnapshotsBase();
     symbolStockSnapshots.setSymbol(symbol);
-    symbolStockSnapshots.setSnapshots(stockSnapshots);
+    symbolStockSnapshots.setSnapshots(new HashSet<>(stockSnapshots));
 
     return symbolStockSnapshots;
   }

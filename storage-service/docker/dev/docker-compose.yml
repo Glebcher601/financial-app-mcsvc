@@ -5,3 +5,12 @@ services:
     container_name: mongo
     ports:
       - 27017:27017
+  mongo-express:
+        restart: always
+        depends_on:
+          - mongo
+        image: mongo-express:latest
+        ports:
+          - 8081:8081
+        links:
+          - mongo:mongo

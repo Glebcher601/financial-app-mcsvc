@@ -22,8 +22,9 @@ public class IdGenService implements CounterService
   public long increaseSequence(String counterName)
   {
     Query query = new Query(Criteria.where("name").is(counterName));
-    Update update = new Update().inc("sequence", 1);
-    MongoCounter counter = mongoTemplate.findAndModify(query, update, MongoCounter.class); // return old Counter object
+    Update update = new Update().inc("value", 1);
+    MongoIdSequence counter = mongoTemplate.findAndModify(query, update, MongoIdSequence.class); // return old
+    // Counter object
 
     return counter.getValue();
   }

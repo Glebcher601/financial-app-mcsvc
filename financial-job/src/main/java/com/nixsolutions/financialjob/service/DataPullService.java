@@ -1,8 +1,8 @@
 package com.nixsolutions.financialjob.service;
 
-import com.nixsolutions.financial.domain.SymbolStockSnapshots;
+import com.nixsolutions.financial.domain.SymbolStockSnapshotsBase;
 
 public interface DataPullService
 {
-  SymbolStockSnapshots pullSnapshotsForSymbol(String symbol);
+  SymbolStockSnapshotsBase pullSnapshotsForSymbol(String symbol);
 }

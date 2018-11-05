@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.nixsolutions.financial.domain.SymbolStockSnapshots;
+import com.nixsolutions.financial.domain.SymbolStockSnapshotsBase;
 import com.nixsolutions.financialjob.job.JobListener;
 import com.nixsolutions.financialjob.job.ListDataSplitter;
 import com.nixsolutions.financialjob.service.DataPullService;
@@ -65,10 +65,10 @@ public class DataPullJobConfiguration
 
   @Bean
   public Step slaveStep(ItemReader<String> reader,
-                        ItemProcessor<String, SymbolStockSnapshots> processor,
-                        ItemWriter<SymbolStockSnapshots> writer)
+                        ItemProcessor<String, SymbolStockSnapshotsBase> processor,
+                        ItemWriter<SymbolStockSnapshotsBase> writer)
   {
-    return steps.get("slaveStep").<String, SymbolStockSnapshots>chunk(1)
+    return steps.get("slaveStep").<String, SymbolStockSnapshotsBase>chunk(1)
         .reader(reader)
         .processor(processor)
         .writer(writer)
@@ -92,14 +92,14 @@ public class DataPullJobConfiguration
 
   @Bean
   @StepScope
-  public ItemProcessor<String, SymbolStockSnapshots> symbolProcessor(DataPullService dataPullService)
+  public ItemProcessor<String, SymbolStockSnapshotsBase> symbolProcessor(DataPullService dataPullService)
   {
     return dataPullService::pullSnapshotsForSymbol;
   }
 
   @Bean
   @StepScope
-  public ItemWriter<SymbolStockSnapshots> stockSnapshotsWriter()
+  public ItemWriter<SymbolStockSnapshotsBase> stockSnapshotsWriter()
   {
     return items ->
     {
