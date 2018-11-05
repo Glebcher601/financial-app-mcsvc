@@ -19,6 +19,6 @@ public class JobListener implements JobExecutionListener
   @Override
   public void afterJob(JobExecution jobExecution)
   {
-    //LOG.debug("Job " + jobExecution + "finished at: " + jobExecution.getEndTime());
+    LOG.debug("Job " + jobExecution + "finished at: " + jobExecution.getEndTime());
   }
 }

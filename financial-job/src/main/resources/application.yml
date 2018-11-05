@@ -6,6 +6,8 @@ job:
       symbols:
         - MSFT
         - AAPL
+        - BA
+        - BABA
       interval: 1min
       function: TIME_SERIES_INTRADAY
       outputsize: compact
