@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Document("sequence")
-public class MongoIdSequence
+public class MongoSequence
 {
   private String name;
 

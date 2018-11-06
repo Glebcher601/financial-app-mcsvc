@@ -1,9 +1,8 @@
 package com.nixsolutions.storageservice.repository;
 
-import java.util.List;
-import com.nixsolutions.financial.domain.StockSnapshotBase;
+import com.nixsolutions.storageservice.domain.SymbolStockSnapshots;
 
-public interface StockSnapshotRepositoryCustom
+public interface StockSnapshotRepositoryCustom extends SequnceGeneratorAware
 {
-  void addSnapshots(String symbol, List<StockSnapshotBase> snapshots);
+  void addSnapshots(SymbolStockSnapshots symbolStockSnapshots);
 }

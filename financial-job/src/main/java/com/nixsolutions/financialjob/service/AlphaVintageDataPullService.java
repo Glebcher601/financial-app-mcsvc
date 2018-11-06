@@ -1,18 +1,6 @@
 package com.nixsolutions.financialjob.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.nixsolutions.financialjob.domain.StockSnapshot;
-import com.nixsolutions.financialjob.domain.SymbolStockSnapshots;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpMethod;
-import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.util.UriComponentsBuilder;
-
+import static java.util.Spliterator.ORDERED;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,8 +10,18 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Spliterators;
 import java.util.stream.StreamSupport;
-
-import static java.util.Spliterator.ORDERED;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpMethod;
+import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.UriComponentsBuilder;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.nixsolutions.financialjob.domain.StockSnapshot;
+import com.nixsolutions.financialjob.domain.SymbolStockSnapshots;
 
 @Service
 public class AlphaVintageDataPullService implements DataPullService
@@ -55,7 +53,7 @@ public class AlphaVintageDataPullService implements DataPullService
 
     SymbolStockSnapshots symbolStockSnapshots = new SymbolStockSnapshots();
     symbolStockSnapshots.setSymbol(symbol);
-    symbolStockSnapshots.setStockSnapshots(new HashSet<>(stockSnapshots));
+    symbolStockSnapshots.setSnapshots(new HashSet<>(stockSnapshots));
 
     return symbolStockSnapshots;
   }

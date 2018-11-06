@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 @Service
-public class IdGenService implements CounterService
+public class IdGenService implements DbSequenceService
 {
   @Autowired
   private MongoTemplate mongoTemplate;
@@ -23,8 +23,7 @@ public class IdGenService implements CounterService
   {
     Query query = new Query(Criteria.where("name").is(counterName));
     Update update = new Update().inc("value", 1);
-    MongoIdSequence counter = mongoTemplate.findAndModify(query, update, MongoIdSequence.class); // return old
-    // Counter object
+    MongoSequence counter = mongoTemplate.findAndModify(query, update, MongoSequence.class);
 
     return counter.getValue();
   }

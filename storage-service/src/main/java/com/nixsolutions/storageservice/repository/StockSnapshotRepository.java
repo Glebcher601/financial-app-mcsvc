@@ -1,14 +1,12 @@
 package com.nixsolutions.storageservice.repository;
 
-import com.nixsolutions.storageservice.domain.StockSnapshot;
+import java.util.Optional;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
-
-import java.util.Optional;
+import com.nixsolutions.storageservice.domain.StockSnapshot;
 
 @Repository
-public interface StockSnapshotRepository extends MongoRepository<StockSnapshot, String>,
-    StockSnapshotRepositoryCustom
+public interface StockSnapshotRepository extends MongoRepository<StockSnapshot, String>, StockSnapshotRepositoryCustom
 {
   Optional<StockSnapshot> findBySymbol(String s);
 
