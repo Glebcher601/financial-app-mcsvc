@@ -1,50 +1,33 @@
 package com.nixsolutions.financialjob.domain;
 
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.nixsolutions.financial.domain.StockSnapshotBase;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-public class StockSnapshot extends StockSnapshotBase
+import java.util.Date;
+
+@Data
+@EqualsAndHashCode
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class StockSnapshot
 {
-  @Override
-  @JsonProperty
-  public Date getTimeStamp()
-  {
-    return super.getTimeStamp();
-  }
+  private String symbol;
 
-  @Override
-  @JsonProperty
-  public double getClose()
-  {
-    return super.getClose();
-  }
+  private Date timeStamp;
 
-  @Override
-  @JsonProperty
-  public double getOpen()
-  {
-    return super.getOpen();
-  }
+  @JsonProperty("1. open")
+  private double open;
 
-  @Override
-  @JsonProperty
-  public int getVolume()
-  {
-    return super.getVolume();
-  }
+  @JsonProperty("2. high")
+  private double low;
 
-  @Override
-  @JsonProperty
-  public double getHigh()
-  {
-    return super.getHigh();
-  }
+  @JsonProperty("3. low")
+  private double high;
 
-  @Override
-  @JsonProperty
-  public double getLow()
-  {
-    return super.getLow();
-  }
+  @JsonProperty("4. close")
+  private double close;
+
+  @JsonProperty("5. volume")
+  private int volume;
 }

@@ -1,6 +1,18 @@
 package com.nixsolutions.financialjob.service;
 
-import static java.util.Spliterator.ORDERED;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.nixsolutions.financialjob.domain.StockSnapshot;
+import com.nixsolutions.financialjob.domain.SymbolStockSnapshots;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpMethod;
+import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.UriComponentsBuilder;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10,18 +22,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Spliterators;
 import java.util.stream.StreamSupport;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpMethod;
-import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.util.UriComponentsBuilder;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.nixsolutions.financial.domain.SymbolStockSnapshotsBase;
-import com.nixsolutions.financialjob.domain.StockSnapshot;
+
+import static java.util.Spliterator.ORDERED;
 
 @Service
 public class AlphaVintageDataPullService implements DataPullService
@@ -38,7 +40,7 @@ public class AlphaVintageDataPullService implements DataPullService
   }
 
   @Override
-  public SymbolStockSnapshotsBase pullSnapshotsForSymbol(String symbol)
+  public SymbolStockSnapshots pullSnapshotsForSymbol(String symbol)
   {
     String uriString = UriComponentsBuilder.fromHttpUrl(templateUri)
         .buildAndExpand(symbol)
@@ -51,9 +53,9 @@ public class AlphaVintageDataPullService implements DataPullService
         .map(this::toEntityList)
         .block();
 
-    SymbolStockSnapshotsBase symbolStockSnapshots = new SymbolStockSnapshotsBase();
+    SymbolStockSnapshots symbolStockSnapshots = new SymbolStockSnapshots();
     symbolStockSnapshots.setSymbol(symbol);
-    symbolStockSnapshots.setSnapshots(new HashSet<>(stockSnapshots));
+    symbolStockSnapshots.setStockSnapshots(new HashSet<>(stockSnapshots));
 
     return symbolStockSnapshots;
   }

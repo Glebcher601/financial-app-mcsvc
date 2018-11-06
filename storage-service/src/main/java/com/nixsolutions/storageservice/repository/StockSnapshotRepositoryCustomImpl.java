@@ -1,14 +1,14 @@
 package com.nixsolutions.storageservice.repository;
 
-import java.util.List;
+import com.nixsolutions.financial.domain.StockSnapshotBase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
-import com.nixsolutions.financial.domain.StockSnapshotBase;
-import com.nixsolutions.storageservice.domain.SymbolStockSnapshot;
+
+import java.util.List;
 
 @Repository
 public class StockSnapshotRepositoryCustomImpl implements StockSnapshotRepositoryCustom
@@ -23,7 +23,7 @@ public class StockSnapshotRepositoryCustomImpl implements StockSnapshotRepositor
     Query query = new Query(Criteria.where("symbol").is(symbol));
     Update update = new Update().addToSet("snapshots").each(snapshots.toArray());
 
-    mongoTemplate.findAndModify(query, update, SymbolStockSnapshot.class);
+    //mongoTemplate.findAndModify(query, update, SymbolStockSnapshot.class);
 
   }
 }

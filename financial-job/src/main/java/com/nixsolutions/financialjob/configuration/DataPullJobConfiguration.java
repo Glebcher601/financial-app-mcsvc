@@ -1,10 +1,9 @@
 package com.nixsolutions.financialjob.configuration;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static com.nixsolutions.financialjob.configuration.ApiUrlConfiguration.UriParams.API_KEY;
-import static com.nixsolutions.financialjob.configuration.ApiUrlConfiguration.UriParams.FUNCTION;
-import static com.nixsolutions.financialjob.configuration.ApiUrlConfiguration.UriParams.INTERVAL;
-import java.util.List;
+import com.nixsolutions.financialjob.domain.SymbolStockSnapshots;
+import com.nixsolutions.financialjob.job.JobListener;
+import com.nixsolutions.financialjob.job.ListDataSplitter;
+import com.nixsolutions.financialjob.service.DataPullService;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,10 +20,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.nixsolutions.financial.domain.SymbolStockSnapshotsBase;
-import com.nixsolutions.financialjob.job.JobListener;
-import com.nixsolutions.financialjob.job.ListDataSplitter;
-import com.nixsolutions.financialjob.service.DataPullService;
+
+import java.util.List;
+
+import static com.google.common.collect.Lists.newArrayList;
+import static com.nixsolutions.financialjob.configuration.ApiUrlConfiguration.UriParams.API_KEY;
+import static com.nixsolutions.financialjob.configuration.ApiUrlConfiguration.UriParams.FUNCTION;
+import static com.nixsolutions.financialjob.configuration.ApiUrlConfiguration.UriParams.INTERVAL;
 
 //TODO Metrics or logs to add
 @Configuration
@@ -65,10 +67,10 @@ public class DataPullJobConfiguration
 
   @Bean
   public Step slaveStep(ItemReader<String> reader,
-                        ItemProcessor<String, SymbolStockSnapshotsBase> processor,
-                        ItemWriter<SymbolStockSnapshotsBase> writer)
+                        ItemProcessor<String, SymbolStockSnapshots> processor,
+                        ItemWriter<SymbolStockSnapshots> writer)
   {
-    return steps.get("slaveStep").<String, SymbolStockSnapshotsBase>chunk(1)
+    return steps.get("slaveStep").<String, SymbolStockSnapshots>chunk(1)
         .reader(reader)
         .processor(processor)
         .writer(writer)
@@ -92,14 +94,14 @@ public class DataPullJobConfiguration
 
   @Bean
   @StepScope
-  public ItemProcessor<String, SymbolStockSnapshotsBase> symbolProcessor(DataPullService dataPullService)
+  public ItemProcessor<String, SymbolStockSnapshots> symbolProcessor(DataPullService dataPullService)
   {
     return dataPullService::pullSnapshotsForSymbol;
   }
 
   @Bean
   @StepScope
-  public ItemWriter<SymbolStockSnapshotsBase> stockSnapshotsWriter()
+  public ItemWriter<SymbolStockSnapshots> stockSnapshotsWriter()
   {
     return items ->
     {
