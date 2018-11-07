@@ -1,6 +1,8 @@
 package com.nixsolutions.storageservice.persistence;
 
+import reactor.core.publisher.Mono;
+
 public interface DbSequenceService
 {
-  long nextValue(String name);
+  Mono<Long> nextValue(String name);
 }

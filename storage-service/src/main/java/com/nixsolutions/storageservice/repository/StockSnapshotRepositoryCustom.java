@@ -1,8 +1,10 @@
 package com.nixsolutions.storageservice.repository;
 
+import com.nixsolutions.storageservice.domain.StockSnapshot;
 import com.nixsolutions.storageservice.domain.SymbolStockSnapshots;
+import reactor.core.publisher.Flux;
 
 public interface StockSnapshotRepositoryCustom extends SequnceGeneratorAware
 {
-  void addSnapshots(SymbolStockSnapshots symbolStockSnapshots);
+  Flux<StockSnapshot> addSnapshots(SymbolStockSnapshots symbolStockSnapshots);
 }

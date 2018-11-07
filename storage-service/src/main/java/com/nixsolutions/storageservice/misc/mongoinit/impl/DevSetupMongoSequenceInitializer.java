@@ -1,6 +1,7 @@
 package com.nixsolutions.storageservice.misc.mongoinit.impl;
 
 import java.util.List;
+import java.util.function.Predicate;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -32,7 +33,7 @@ public class DevSetupMongoSequenceInitializer implements MongoSequenceInitialize
   public void init()
   {
     generatorAwares.stream()
-        .filter(AopUtils::isAopProxy)
+        .filter(((Predicate<? super SequnceGeneratorAware>) AopUtils::isAopProxy).negate())
         .forEach(gen -> initSequence(gen.getSequenceName()));
   }
 
