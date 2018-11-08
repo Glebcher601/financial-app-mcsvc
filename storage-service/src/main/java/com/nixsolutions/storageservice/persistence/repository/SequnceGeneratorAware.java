@@ -1,4 +1,4 @@
-package com.nixsolutions.storageservice.repository;
+package com.nixsolutions.storageservice.persistence.repository;
 
 public interface SequnceGeneratorAware
 {

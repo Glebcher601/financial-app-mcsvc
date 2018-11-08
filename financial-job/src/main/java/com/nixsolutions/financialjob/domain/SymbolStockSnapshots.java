@@ -8,5 +8,5 @@ public class SymbolStockSnapshots
 {
   private String symbol;
 
-  private Set<StockSnapshot> snapshots;
+  private Set<StockSnapshotAlphaVantage> snapshots;
 }

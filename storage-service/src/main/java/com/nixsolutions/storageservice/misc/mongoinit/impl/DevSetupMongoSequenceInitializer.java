@@ -12,7 +12,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 import com.nixsolutions.storageservice.misc.mongoinit.MongoSequenceInitializer;
 import com.nixsolutions.storageservice.persistence.MongoSequence;
-import com.nixsolutions.storageservice.repository.SequnceGeneratorAware;
+import com.nixsolutions.storageservice.persistence.repository.SequnceGeneratorAware;
 
 @Component
 @Profile("dev")

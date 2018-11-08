@@ -1,4 +1,4 @@
-package com.nixsolutions.storageservice.repository.impl;
+package com.nixsolutions.storageservice.persistence.repository.impl;
 
 import static java.util.stream.Collectors.toList;
 import java.util.Collection;
@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import com.nixsolutions.storageservice.domain.StockSnapshot;
 import com.nixsolutions.storageservice.domain.SymbolStockSnapshots;
 import com.nixsolutions.storageservice.persistence.DbSequenceService;
-import com.nixsolutions.storageservice.repository.StockSnapshotRepositoryCustom;
+import com.nixsolutions.storageservice.persistence.repository.StockSnapshotRepositoryCustom;
 import reactor.core.publisher.Flux;
 
 public class StockSnapshotRepositoryCustomImpl implements StockSnapshotRepositoryCustom

@@ -1,4 +1,4 @@
-package com.nixsolutions.storageservice.repository;
+package com.nixsolutions.storageservice.persistence.repository;
 
 import com.nixsolutions.storageservice.domain.StockSnapshot;
 import com.nixsolutions.storageservice.domain.SymbolStockSnapshots;

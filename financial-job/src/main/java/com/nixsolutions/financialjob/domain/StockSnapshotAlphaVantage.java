@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class StockSnapshot
+public class StockSnapshotAlphaVantage
 {
   private Date timeStamp;
 
@@ -56,5 +56,35 @@ public class StockSnapshot
   public void setVolume(int volume)
   {
     this.volume = volume;
+  }
+
+  @JsonProperty("open")
+  public double getOpen()
+  {
+    return this.open;
+  }
+
+  @JsonProperty("low")
+  public double getLow()
+  {
+    return this.low;
+  }
+
+  @JsonProperty("high")
+  public double getHigh()
+  {
+    return this.high;
+  }
+
+  @JsonProperty("close")
+  public double getClose()
+  {
+    return this.close;
+  }
+
+  @JsonProperty("volume")
+  public int getVolume()
+  {
+    return this.volume;
   }
 }

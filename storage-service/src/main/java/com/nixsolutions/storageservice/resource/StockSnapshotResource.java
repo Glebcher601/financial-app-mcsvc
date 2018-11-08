@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.nixsolutions.storageservice.domain.StockSnapshot;
 import com.nixsolutions.storageservice.domain.SymbolStockSnapshots;
-import com.nixsolutions.storageservice.repository.StockSnapshotRepository;
+import com.nixsolutions.storageservice.persistence.repository.StockSnapshotRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

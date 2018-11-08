@@ -1,4 +1,4 @@
-package com.nixsolutions.storageservice.repository;
+package com.nixsolutions.storageservice.persistence.repository;
 
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
