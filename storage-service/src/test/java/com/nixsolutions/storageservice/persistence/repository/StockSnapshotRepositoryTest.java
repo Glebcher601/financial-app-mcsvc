@@ -1,10 +1,7 @@
 package com.nixsolutions.storageservice.persistence.repository;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nixsolutions.storageservice.domain.StockSnapshot;
-import com.nixsolutions.storageservice.domain.SymbolStockSnapshots;
-import com.nixsolutions.storageservice.misc.mongoinit.MongoSequenceInitializer;
-import com.nixsolutions.storageservice.persistence.MongoSequence;
+import java.io.IOException;
+import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -15,11 +12,13 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nixsolutions.storageservice.domain.StockSnapshot;
+import com.nixsolutions.storageservice.domain.SymbolStockSnapshots;
+import com.nixsolutions.storageservice.misc.mongoinit.MongoSequenceInitializer;
+import com.nixsolutions.storageservice.persistence.MongoSequence;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
-
-import java.io.IOException;
-import java.util.Arrays;
 
 @ExtendWith(SpringExtension.class)
 @DataMongoTest
@@ -80,6 +79,24 @@ public class StockSnapshotRepositoryTest
 
     //then
     StepVerifier.create(msft)
+        .expectNext(getTestingData(ACTUAL_DATA_FOLDER + "/diffSymbolsMSFT-expected.json", StockSnapshot.class))
+        .expectComplete()
+        .verify();
+  }
+
+  @Test
+  public void testDeleteBySymbol() throws Exception
+  {
+    //given
+    stockSnapshotRepository.saveAll(
+        Arrays.asList(getTestingData(TEST_DATA_FOLDER + "/snapshotsForDiffSymbols.json", StockSnapshot[].class)))
+        .collectList().block();
+
+    //when
+    stockSnapshotRepository.deleteBySymbol("BA").collectList().block();
+
+    //then
+    StepVerifier.create(stockSnapshotRepository.findAll())
         .expectNext(getTestingData(ACTUAL_DATA_FOLDER + "/diffSymbolsMSFT-expected.json", StockSnapshot.class))
         .expectComplete()
         .verify();

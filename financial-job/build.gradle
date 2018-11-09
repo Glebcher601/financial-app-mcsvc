@@ -39,6 +39,7 @@ dependencies {
 
 	runtimeOnly('org.springframework.boot:spring-boot-devtools')
 	compileOnly('org.projectlombok:lombok')
+	compileOnly('org.springframework.boot:spring-boot-configuration-processor')
 
 	testCompile group: 'com.squareup.okhttp3', name: 'mockwebserver', version: '3.2.0'
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
