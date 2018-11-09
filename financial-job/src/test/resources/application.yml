@@ -6,9 +6,33 @@ job:
       symbols:
         - MSFT
         - AAPL
+        - BA
+        - BABA
       interval: 1min
       function: TIME_SERIES_INTRADAY
       outputsize: compact
-loggig:
-  level:
-    com.nixsolutions: DEBUG
+server:
+  port: 8888
+
+spring:
+  batch:
+    job:
+      enabled: false
+
+---
+
+spring:
+  profiles: dev
+job:
+  properties:
+    cron: 0 0/1 * * * ?
+    threads: 1
+
+---
+
+spring:
+  profiles: stage
+job:
+  properties:
+    cron: 0 0 12 * * *
+    threads: 4

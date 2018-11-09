@@ -1,8 +1,11 @@
 package com.nixsolutions.storageservice.persistence.repository;
 
-import java.io.IOException;
-import java.util.Arrays;
-import org.junit.jupiter.api.AfterEach;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nixsolutions.storageservice.domain.StockSnapshot;
+import com.nixsolutions.storageservice.domain.SymbolStockSnapshots;
+import com.nixsolutions.storageservice.misc.mongoinit.MongoSequenceInitializer;
+import com.nixsolutions.storageservice.persistence.MongoSequence;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,11 +15,11 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nixsolutions.storageservice.domain.StockSnapshot;
-import com.nixsolutions.storageservice.domain.SymbolStockSnapshots;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
+
+import java.io.IOException;
+import java.util.Arrays;
 
 @ExtendWith(SpringExtension.class)
 @DataMongoTest
@@ -34,6 +37,18 @@ public class StockSnapshotRepositoryTest
 
   @Autowired
   private StockSnapshotRepository stockSnapshotRepository;
+
+  @Autowired
+  private MongoSequenceInitializer mongoSequenceInitializer;
+
+  @BeforeEach
+  public void beforeTest()
+  {
+    mongoTemplate.remove(StockSnapshot.class).all();
+    mongoTemplate.remove(MongoSequence.class).all();
+
+    mongoSequenceInitializer.init();
+  }
 
   @Test
   public void testSaveSymbolSnapshots() throws Exception
@@ -68,12 +83,6 @@ public class StockSnapshotRepositoryTest
         .expectNext(getTestingData(ACTUAL_DATA_FOLDER + "/diffSymbolsMSFT-expected.json", StockSnapshot.class))
         .expectComplete()
         .verify();
-  }
-
-  @AfterEach
-  public void afterTest()
-  {
-    
   }
 
   private <E> E getTestingData(String file, Class<E> clazz) throws IOException
