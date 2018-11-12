@@ -1,0 +1,25 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+group = 'com.nixsolutions'
+version = '0.0.1-SNAPSHOT'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+tasks.withType(JavaCompile) {
+	options.encoding = 'UTF-8'
+}
+
+
+
+repositories {
+     mavenLocal()
+     maven { url "http://repo.maven.apache.org/maven2" }
+}
+dependencies {
+    compile group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version:'2.1.0.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-configuration-processor', version:'2.1.0.RELEASE'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version:'3.5'
+    compileOnly group: 'org.projectlombok', name: 'lombok', version:'1.16.20'
+    compile group: 'org.hibernate', name: 'hibernate-validator', version:'5.4.1.Final'
+}

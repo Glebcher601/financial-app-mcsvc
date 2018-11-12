@@ -1,26 +1,20 @@
 package com.nixsolutions.financial.discovery;
 
 import static com.nixsolutions.financial.discovery.DiscoveryType.LOCAL;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class ServiceRegistry
 {
   private static final String HTTP_SCHEME = "http://";
   private static final String LOCALHOST = "localhost:";
-  private ServiceDiscoveryConfig serviceDiscoveryConfig;
-
-  private ServiceRegistry(ServiceDiscoveryConfig serviceDiscoveryConfig)
-  {
-    this.serviceDiscoveryConfig = serviceDiscoveryConfig;
-  }
-
-  public static ServiceRegistry create(ServiceDiscoveryConfig serviceDiscoveryConfig)
-  {
-    return new ServiceRegistry(serviceDiscoveryConfig);
-  }
+  private ServiceDiscoveryProperties serviceDiscoveryProperties;
 
   public String getServiceUrl(String svcName)
   {
-    return serviceDiscoveryConfig.getList().stream()
+    return serviceDiscoveryProperties.getList().stream()
         .filter(svc -> svc.getName().equals(svcName))
         .findAny()
         .map(this::serviceRecordToUrl)
