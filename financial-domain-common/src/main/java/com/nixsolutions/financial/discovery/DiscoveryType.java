@@ -4,5 +4,4 @@ public enum DiscoveryType
 {
   LOCAL, CLUSTER
 
-
 }
