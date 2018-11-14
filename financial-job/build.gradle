@@ -27,7 +27,6 @@ repositories {
 
 dependencies {
 	implementation('com.nixsolutions:financial-domain-starter:0.0.1-SNAPSHOT')
-	//compile("com.nixsolutions:financial-domain-common:1.0-SNAPSHOT")
 	compile group: 'commons-collections', name: 'commons-collections', version: '3.2.1'
 	compile group: 'com.google.guava', name: 'guava', version: '27.0-jre'
 	compile group: 'commons-io', name: 'commons-io', version: '2.6'

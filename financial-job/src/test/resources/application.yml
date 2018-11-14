@@ -19,6 +19,14 @@ spring:
     job:
       enabled: false
 
+services:
+  list:
+    -
+      name: TEST
+      resolution: LOCAL
+      port: 8889
+      version: 0.1
+
 ---
 
 spring:

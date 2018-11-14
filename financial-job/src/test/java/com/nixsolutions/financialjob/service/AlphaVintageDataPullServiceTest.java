@@ -1,9 +1,5 @@
 package com.nixsolutions.financialjob.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nixsolutions.financialjob.domain.SymbolStockSnapshots;
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Before;
@@ -11,14 +7,14 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.internal.runners.JUnit4ClassRunner;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nixsolutions.financialjob.domain.SymbolStockSnapshots;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
 
 @RunWith(JUnit4ClassRunner.class)
 public class AlphaVintageDataPullServiceTest
 {
-  @Autowired
-  DataPullService dataPullService;
-
   @Rule
   public MockWebServer mockWebServer = new MockWebServer();
 

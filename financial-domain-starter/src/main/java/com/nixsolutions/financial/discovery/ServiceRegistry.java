@@ -8,8 +8,19 @@ import lombok.Setter;
 @Setter
 public class ServiceRegistry
 {
+
+  public static final String COLON = ":";
+
+  public static class Services
+  {
+    public static final String STORAGE = "storage";
+    public static final String UI = "ui";
+    public static final String PREDICTION = "prediction";
+    public static final String USER_AUTH = "userAuth";
+  }
+
   private static final String HTTP_SCHEME = "http://";
-  private static final String LOCALHOST = "localhost:";
+  private static final String LOCALHOST = "localhost";
   private ServiceDiscoveryProperties serviceDiscoveryProperties;
 
   public String getServiceUrl(String svcName)
@@ -18,7 +29,7 @@ public class ServiceRegistry
         .filter(svc -> svc.getName().equals(svcName))
         .findAny()
         .map(this::serviceRecordToUrl)
-        .orElseThrow(DiscoveryValidationException::new);
+        .orElseThrow(DiscoveryException::new);
   }
 
   private String serviceRecordToUrl(ServiceRecord serviceRecord)
@@ -28,10 +39,11 @@ public class ServiceRegistry
 
     if (resolution.equals(LOCAL))
     {
-      return HTTP_SCHEME + LOCALHOST + port;
-    } else
+      return HTTP_SCHEME + LOCALHOST + COLON + port;
+    }
+    else
     {
-      return HTTP_SCHEME + serviceRecord.getName() + port;
+      return HTTP_SCHEME + serviceRecord.getName() + COLON + port;
     }
   }
 }

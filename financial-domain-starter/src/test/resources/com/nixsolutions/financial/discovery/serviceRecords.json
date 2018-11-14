@@ -1,0 +1,12 @@
+[
+  {
+    "name": "service_local",
+    "resolution": "LOCAL",
+    "port": "8888"
+  },
+  {
+    "name": "service_cluster",
+    "resolution": "CLUSTER",
+    "port": "8888"
+  }
+]

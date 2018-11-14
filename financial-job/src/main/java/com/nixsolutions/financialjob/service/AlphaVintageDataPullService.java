@@ -79,17 +79,9 @@ public class AlphaVintageDataPullService implements DataPullService
         .orElseThrow(RuntimeException::new);
   }
 
-  private String functionThr(String arg1) throws Exception
-  {
-    return arg1;
-  }
-
   private List<StockSnapshotAlphaVantage> toEntityList(ObjectNode objectNode, String timeZone)
   {
     ArrayList<StockSnapshotAlphaVantage> result = new ArrayList<>();
-
-
-    ThrowingFunction<String, String, Exception> thr = this::functionThr;
 
     objectNode.fields()
         .forEachRemaining(entry ->
