@@ -1,6 +1,10 @@
 package com.nixsolutions.storageservice.resource;
 
-import java.util.List;
+import com.nixsolutions.storageservice.domain.StockSnapshot;
+import com.nixsolutions.storageservice.domain.SymbolStockSnapshots;
+import com.nixsolutions.storageservice.persistence.repository.StockSnapshotRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,16 +15,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.nixsolutions.storageservice.domain.StockSnapshot;
-import com.nixsolutions.storageservice.domain.SymbolStockSnapshots;
-import com.nixsolutions.storageservice.persistence.repository.StockSnapshotRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-@RequestMapping(path = "/stocksSnapshots")
+import java.util.List;
+
+@RequestMapping(path = "/stockSnapshots")
 @RestController
 public class StockSnapshotResource
 {
+  private static final Logger LOG = LoggerFactory.getLogger(StockSnapshotResource.class);
   private final StockSnapshotRepository stockSnapshotRepository;
 
   @Autowired
@@ -48,6 +52,8 @@ public class StockSnapshotResource
   public Mono<ResponseEntity<List<StockSnapshot>>> createSnapshots(@RequestBody SymbolStockSnapshots
                                                                        symbolStockSnapshots)
   {
+    LOG.debug("Symbol " + symbolStockSnapshots.getSymbol() + " arrived, snapshot count: "
+        + symbolStockSnapshots.getSnapshots().size());
     return stockSnapshotRepository.addSnapshots(symbolStockSnapshots).collectList()
         .map(ResponseEntity::ok)
         .defaultIfEmpty(ResponseEntity.notFound().build());

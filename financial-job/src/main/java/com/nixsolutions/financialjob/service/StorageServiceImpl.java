@@ -1,7 +1,7 @@
 package com.nixsolutions.financialjob.service;
 
-import static com.nixsolutions.financial.discovery.ServiceRegistry.Services.STORAGE;
-import java.util.List;
+import com.nixsolutions.financial.discovery.ServiceRegistry;
+import com.nixsolutions.financialjob.domain.SymbolStockSnapshots;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -9,8 +9,8 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
-import com.nixsolutions.financial.discovery.ServiceRegistry;
-import com.nixsolutions.financialjob.domain.StockSnapshotDto;
+
+import static com.nixsolutions.financial.discovery.ServiceRegistry.Services.STORAGE;
 
 @Component
 public class StorageServiceImpl implements StorageService
@@ -21,10 +21,10 @@ public class StorageServiceImpl implements StorageService
   private ServiceRegistry serviceRegistry;
 
   @Override
-  public void save(List<StockSnapshotDto> snapshotDtos)
+  public void save(SymbolStockSnapshots symbolStockSnapshots)
   {
-    getWebClient().put()
-        .body(BodyInserters.fromObject(snapshotDtos))
+    getWebClient().post()
+        .body(BodyInserters.fromObject(symbolStockSnapshots))
         .exchange()
         .map(ClientResponse::statusCode)
         .blockOptional()

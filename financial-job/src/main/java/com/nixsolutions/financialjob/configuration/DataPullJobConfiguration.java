@@ -4,6 +4,7 @@ import com.nixsolutions.financialjob.domain.SymbolStockSnapshots;
 import com.nixsolutions.financialjob.job.JobListener;
 import com.nixsolutions.financialjob.job.ListDataSplitter;
 import com.nixsolutions.financialjob.service.DataPullService;
+import com.nixsolutions.financialjob.service.StorageService;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +40,9 @@ public class DataPullJobConfiguration
 
   @Autowired
   private StepBuilderFactory steps;
+
+  @Autowired
+  private StorageService storageService;
 
   @Bean
   public String prefilledTemplateUrl(ApiUrlConfiguration apiProps)
@@ -105,8 +109,8 @@ public class DataPullJobConfiguration
   {
     return items ->
     {
-      LOG.debug("Written snapshot items for symbol: " + items.get(0).getSymbol());
-      //TODO write to stock service
+      LOG.debug("Writting snapshot items for symbol: " + items.get(0).getSymbol());
+      items.forEach(storageService::save);
     };
   }
 

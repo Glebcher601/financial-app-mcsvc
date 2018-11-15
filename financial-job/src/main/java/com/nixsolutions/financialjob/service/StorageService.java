@@ -1,9 +1,8 @@
 package com.nixsolutions.financialjob.service;
 
-import java.util.List;
-import com.nixsolutions.financialjob.domain.StockSnapshotDto;
+import com.nixsolutions.financialjob.domain.SymbolStockSnapshots;
 
 public interface StorageService
 {
-  void save(List<StockSnapshotDto> snapshotDtos);
+  void save(SymbolStockSnapshots symbolStockSnapshots);
 }

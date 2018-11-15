@@ -1,5 +1,10 @@
 package com.nixsolutions.financialjob.service;
 
+import com.nixsolutions.financial.config.EnableSimpleDiscovery;
+import com.nixsolutions.financial.discovery.ServiceRegistry;
+import com.nixsolutions.financialjob.domain.SymbolStockSnapshots;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Rule;
@@ -13,11 +18,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-import com.google.common.collect.Lists;
-import com.nixsolutions.financial.config.EnableSimpleDiscovery;
-import com.nixsolutions.financial.discovery.ServiceRegistry;
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = StorageServiceImplTest.class, initializers = ConfigFileApplicationContextInitializer
@@ -57,10 +57,9 @@ public class StorageServiceImplTest
     //when
     try
     {
-      storageService.save(Lists.newArrayList());
+      storageService.save(new SymbolStockSnapshots());
       Assertions.fail("Exception expected| None present");
-    }
-    catch (Exception e)
+    } catch (RuntimeException e)
     {
 
     }
@@ -75,7 +74,7 @@ public class StorageServiceImplTest
     mockWebServer.enqueue(new MockResponse().setStatus("HTTP/1.1 200 OK"));
 
     //when
-    storageService.save(Lists.newArrayList());
+    storageService.save(new SymbolStockSnapshots());
   }
 
 
