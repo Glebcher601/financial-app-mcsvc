@@ -28,7 +28,7 @@ repositories {
 
 
 dependencies {
-    compile("com.nixsolutions:financial-domain-common:1.0-SNAPSHOT")
+	implementation('com.nixsolutions:financial-domain-starter:0.0.1-SNAPSHOT')
     implementation('org.springframework.boot:spring-boot-starter-actuator')
 	implementation('org.springframework.boot:spring-boot-starter-data-mongodb-reactive')
 	implementation('org.springframework.boot:spring-boot-starter-webflux')

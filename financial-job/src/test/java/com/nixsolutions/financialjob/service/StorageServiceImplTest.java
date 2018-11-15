@@ -4,12 +4,16 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
+import com.google.common.collect.Lists;
 import com.nixsolutions.financial.config.EnableSimpleDiscovery;
 import com.nixsolutions.financial.discovery.ServiceRegistry;
 import okhttp3.mockwebserver.MockResponse;
@@ -19,35 +23,47 @@ import okhttp3.mockwebserver.MockWebServer;
 @ContextConfiguration(classes = StorageServiceImplTest.class, initializers = ConfigFileApplicationContextInitializer
     .class)
 @EnableSimpleDiscovery
+@ComponentScan(basePackages = "com.nixsolutions.financialjob.service",
+    excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = AlphaVintageDataPullService
+        .class))
 @Configuration
 public class StorageServiceImplTest
 {
-  private static final String TEST_SVC = "TEST";
-
   @Rule
   public MockWebServer mockWebServer = new MockWebServer();
 
   @Autowired
   private ServiceRegistry serviceRegistry;
 
+  @Autowired
+  private StorageService storageService;
+
   @Before
   public void setUp() throws Exception
   {
     serviceRegistry.getServiceDiscoveryProperties().getList()
         .stream()
-        .filter(svcRecord -> StringUtils.equals(svcRecord.getName(), TEST_SVC))
+        .filter(svcRecord -> StringUtils.equals(svcRecord.getName(), ServiceRegistry.Services.STORAGE))
         .forEach(svcRecord -> svcRecord.setPort(String.valueOf(mockWebServer.getPort())));
 
   }
 
   @Test
-  public void shouldThrowExceptionIfErrorResultRecieved() throws Exception
+  public void shouldThrowExceptionIfErrorResultRecieved()
   {
     //given
-    mockWebServer.enqueue(new MockResponse().setStatus("500"));
+    mockWebServer.enqueue(new MockResponse().setStatus("HTTP/1.1 500 INTERNAL SERVER ERROR"));
 
     //when
+    try
+    {
+      storageService.save(Lists.newArrayList());
+      Assertions.fail("Exception expected| None present");
+    }
+    catch (Exception e)
+    {
 
+    }
 
     //then
   }
@@ -55,6 +71,11 @@ public class StorageServiceImplTest
   @Test
   public void shouldSucceedOnOkResult() throws Exception
   {
+    //given
+    mockWebServer.enqueue(new MockResponse().setStatus("HTTP/1.1 200 OK"));
+
+    //when
+    storageService.save(Lists.newArrayList());
   }
 
 

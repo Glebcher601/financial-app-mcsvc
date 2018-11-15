@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.nixsolutions.financial.discovery.ServiceRegistry;
@@ -25,9 +26,9 @@ public class StorageServiceImpl implements StorageService
     getWebClient().put()
         .body(BodyInserters.fromObject(snapshotDtos))
         .exchange()
-        .map(resp -> resp.statusCode())
+        .map(ClientResponse::statusCode)
         .blockOptional()
-        .map(HttpStatus::is2xxSuccessful)
+        .filter(HttpStatus::is2xxSuccessful)
         .orElseThrow(RuntimeException::new);
   }
 

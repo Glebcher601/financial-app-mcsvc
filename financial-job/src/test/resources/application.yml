@@ -22,7 +22,7 @@ spring:
 services:
   list:
     -
-      name: TEST
+      name: storage
       resolution: LOCAL
       port: 8889
       version: 0.1
