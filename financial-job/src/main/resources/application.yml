@@ -48,3 +48,10 @@ job:
   properties:
     cron: 0 0 12 * * *
     threads: 4
+services:
+  list:
+    -
+      name: storage
+      resolution: CLUSTER
+      port: 8889
+      version: 0.1

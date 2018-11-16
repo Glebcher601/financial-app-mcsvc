@@ -1,0 +1,27 @@
+server:
+  port: 8890
+spring:
+  profiles:
+    active: dev
+
+---
+
+spring:
+  profiles: dev
+services:
+  list:
+    -
+      name: storage
+      resolution: LOCAL
+      port: 8889
+      version: 0.1
+    -
+      name: usersvc
+      resolution: LOCAL
+      port: 8891
+      version: 0.1
+    -
+      name: prediction
+      resolution: LOCAL
+      port: 8892
+      version: 0.1

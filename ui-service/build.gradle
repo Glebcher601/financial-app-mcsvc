@@ -13,6 +13,7 @@ buildscript {
 	}
 }
 
+apply plugin: 'maven'
 apply plugin: 'kotlin'
 apply plugin: 'kotlin-spring'
 apply plugin: 'eclipse'
@@ -36,17 +37,23 @@ compileTestKotlin {
 }
 
 repositories {
+	maven { url 'https://jitpack.io' }
+    mavenLocal()
 	mavenCentral()
 }
 
 
 dependencies {
+	implementation('com.nixsolutions:financial-domain-starter:0.0.1-SNAPSHOT')
 	implementation('org.springframework.boot:spring-boot-starter-actuator')
 	implementation('org.springframework.boot:spring-boot-starter-webflux')
 	implementation('com.fasterxml.jackson.module:jackson-module-kotlin')
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
+	compileOnly('org.projectlombok:lombok')
+
 	runtimeOnly('org.springframework.boot:spring-boot-devtools')
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
 	testImplementation('io.projectreactor:reactor-test')
+	testCompile('com.github.sbrannen:spring-test-junit5:1.3.1')
 }
