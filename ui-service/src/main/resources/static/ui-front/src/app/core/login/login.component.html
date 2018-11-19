@@ -1,0 +1,29 @@
+<div>
+  <mat-card>
+    <form (ngSubmit)="login()" [formGroup]="loginForm" novalidate>
+      <mat-card-header><h2>Login Form</h2></mat-card-header>
+      <mat-card-content style="background: #FFFFFF">
+        <table>
+          <tr valign="top">
+            <td>
+              <mat-form-field style="width:365px">
+                <input matInput placeholder="Username" formControlName="username">
+              </mat-form-field>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <mat-form-field style="width:365px">
+                <input matInput placeholder="Password" type="password" formControlName="password"/>
+              </mat-form-field>
+            </td>
+          </tr>
+        </table>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="primary">Login</button>
+      </mat-card-actions>
+      <div *ngIf="error" class="alert-error">{{error}}</div>
+    </form>
+  </mat-card>
+</div>
