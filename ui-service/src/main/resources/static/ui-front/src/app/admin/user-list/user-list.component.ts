@@ -1,7 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {Router} from "@angular/router";
 import {User} from "../../core/domain/user";
-import {MatTableDataSource} from '@angular/material';
+import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
+import {UsersService} from "../../core/services/users.service";
+import {FilterService} from "../../core/services/filter.service";
 
 @Component({
   selector: 'app-user-list',
@@ -9,9 +11,6 @@ import {MatTableDataSource} from '@angular/material';
   styleUrls: ['./user-list.component.css']
 })
 export class UserListComponent implements OnInit {
-
-  constructor(private router: Router) {
-  }
 
   userDataSource: MatTableDataSource<User>;
   columns = [
@@ -37,30 +36,35 @@ export class UserListComponent implements OnInit {
     }
   ];
   displayColumns = [...this.columns.reduce(
-    (array: string[], column: any) => {
-      array.push(column['key']);
-      return array;
-    }, [])];
+      (array: string[], column: any) => {
+        array.push(column['key']);
+        return array;
+      }, [])];
+  filterValue: string;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+
+  constructor(private router: Router,
+              private usersService: UsersService,
+              private filterService: FilterService) {
+
+    this.userDataSource = new MatTableDataSource<User>();
+  }
 
   ngOnInit() {
-    const usr1: User = new User;
+    this.usersService.getAll().subscribe(data => {
+      this.userDataSource.data = data;
+    });
 
-    usr1.id = 1;
-    usr1.enabled = true;
-    usr1.login = "login";
-    usr1.password = "psswd";
+    this.filterService.userFilterValue.subscribe(data => this.filterValue = data);
+    if (this.filterValue) {
+      this.applyFilter(this.filterValue);
+    }
+  }
 
-    const usr2: User = new User;
-
-    usr1.id = 2;
-    usr1.enabled = true;
-    usr1.login = "login1";
-    usr1.password = "psswd1";
-
-    this.userDataSource.data = [
-      usr1,
-      usr2
-    ];
+  applyFilter(filterValue: string) {
+    this.filterService.userFilterSubject.next(filterValue);
+    this.userDataSource.filter = filterValue.trim().toLowerCase();
   }
 
 }
