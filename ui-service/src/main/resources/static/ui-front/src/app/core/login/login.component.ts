@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit {
 
   login() {
     const formModel = this.loginForm.value;
-    this.router.navigate(['home']);
+    this.router.navigate(['admin']);
   }
 
 }

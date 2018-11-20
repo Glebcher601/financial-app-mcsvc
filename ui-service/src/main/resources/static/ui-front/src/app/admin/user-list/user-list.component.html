@@ -18,8 +18,7 @@
                   <mat-paginator #paginator [pageSize]="25" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
             -->
 
-            <mat-table #rangeTable [dataSource]="userDataSource" matSort matSortActive="dateFrom"
-                       matSortDirection="asc">
+          <mat-table #rangeTable [dataSource]="userDataSource" matSort matSortDirection="asc">
                 <!-- Main Columns -->
                 <ng-container *ngFor="let column of columns" [matColumnDef]="column.key">
                     <mat-header-cell *matHeaderCellDef mat-sort-header>{{ column.header }}</mat-header-cell>

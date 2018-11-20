@@ -3,7 +3,7 @@ import {CommonModule} from '@angular/common';
 import {LoginComponent} from "./login/login.component";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {CoreRoutingModule} from "./core-routing.module";
-import {HeaderComponent} from './header/header.component';
+//import {HeaderComponent} from './header/header.component';
 import {RouterModule} from "@angular/router";
 import {MaterialModule} from "../material.module";
 
@@ -17,11 +17,11 @@ import {MaterialModule} from "../material.module";
   ],
   declarations: [
     LoginComponent,
-    HeaderComponent
+    // HeaderComponent
   ],
   exports: [
     RouterModule,
-    HeaderComponent,
+    //HeaderComponent,
 
     CommonModule,
     FormsModule,

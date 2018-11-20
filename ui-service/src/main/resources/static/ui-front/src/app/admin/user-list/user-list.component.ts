@@ -14,6 +14,33 @@ export class UserListComponent implements OnInit {
   }
 
   userDataSource: MatTableDataSource<User>;
+  columns = [
+    {
+      key: 'id',
+      header: 'Id',
+      cell: row => row.id
+    },
+    {
+      key: 'login',
+      header: 'Login',
+      cell: row => row.login
+    },
+    {
+      key: 'password',
+      header: 'Password',
+      cell: row => row.password
+    },
+    {
+      key: 'enabled',
+      header: 'Enabled',
+      cell: row => row.enabled
+    }
+  ];
+  displayColumns = [...this.columns.reduce(
+    (array: string[], column: any) => {
+      array.push(column['key']);
+      return array;
+    }, [])];
 
   ngOnInit() {
     const usr1: User = new User;
