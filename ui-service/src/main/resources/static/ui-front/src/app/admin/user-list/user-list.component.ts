@@ -1,9 +1,10 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {User} from "../../core/domain/user";
-import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
+import {MatPaginator, MatRow, MatSort, MatTableDataSource} from '@angular/material';
 import {UsersService} from "../../core/services/users.service";
 import {FilterService} from "../../core/services/filter.service";
+import {UserFormComponent} from "../user-form/user-form.component";
 
 @Component({
   selector: 'app-user-list',
@@ -12,6 +13,7 @@ import {FilterService} from "../../core/services/filter.service";
 })
 export class UserListComponent implements OnInit {
 
+  rowSelected: User;
   userDataSource: MatTableDataSource<User>;
   columns = [
     {
@@ -43,8 +45,10 @@ export class UserListComponent implements OnInit {
   filterValue: string;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(UserFormComponent) userFormComponent: UserFormComponent;
 
   constructor(private router: Router,
+              private activeRoute: ActivatedRoute,
               private usersService: UsersService,
               private filterService: FilterService) {
 
@@ -65,6 +69,14 @@ export class UserListComponent implements OnInit {
   applyFilter(filterValue: string) {
     this.filterService.userFilterSubject.next(filterValue);
     this.userDataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  addUser(): void {
+    this.router.navigate(['addPerson'], {relativeTo: this.activeRoute});
+  }
+
+  selectRow(row: MatRow) {
+    this.userFormComponent.userBehaviourSubject.next(<User> row.valueOf());
   }
 
 }

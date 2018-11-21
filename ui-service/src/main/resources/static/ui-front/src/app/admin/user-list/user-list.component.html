@@ -3,7 +3,7 @@
         <mat-card-header><h2>User Admin view</h2></mat-card-header>
         <mat-card-content>
             <div>
-                <button mat-raised-button color="primary" class="add-button" (click)="console.log('ADD NEW USER')">Add
+                <button mat-raised-button color="primary" class="add-button" (click)="addUser()">Add
                     User
                 </button>
             </div>
@@ -21,8 +21,9 @@
                 </ng-container>
 
                 <mat-header-row *matHeaderRowDef="displayColumns"></mat-header-row>
-                <mat-row *matRowDef="let row; columns: displayColumns;"></mat-row>
+                <mat-row *matRowDef="let row; columns: displayColumns;" (click)="selectRow(row)"></mat-row>
             </mat-table>
         </mat-card-content>
     </mat-card>
+    <app-user-form></app-user-form>
 </div>

@@ -1,0 +1,19 @@
+.full-width {
+    width: 100%;
+}
+
+.field-full-width {
+    width: 90%;
+}
+
+.field-half-width {
+    width: 50%;
+}
+
+mat-form-field {
+    margin: 10px;
+}
+
+.mat-checkbox {
+    margin-left: 10px;
+}

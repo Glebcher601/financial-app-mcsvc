@@ -3,4 +3,5 @@ export class User {
   login: string;
   password: string;
   enabled: boolean;
+  permissionGroup: string;
 }
