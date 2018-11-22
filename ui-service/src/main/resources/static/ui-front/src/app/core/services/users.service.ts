@@ -7,14 +7,12 @@ import {HttpClient} from "@angular/common/http";
 import {USERS_RESOURCE} from "../domain/constants";
 
 @Injectable()
-export class UsersService extends GenericService<User> {
+export class UsersMockTestService extends GenericService<User> {
 
+  users: User[];
 
   constructor(httpClient: HttpClient) {
     super(httpClient, USERS_RESOURCE);
-  }
-
-  getAll(): Observable<User[]> {
     const usr1: User = new User;
 
     usr1.id = 1;
@@ -43,6 +41,25 @@ export class UsersService extends GenericService<User> {
     usr4.login = "login3";
     usr4.password = "psswd3";
 
-    return Observable.from([[usr1, usr2, usr3, usr4]]);
+    this.users = [usr1, usr2, usr3, usr4];
+  }
+
+  getAll(): Observable<User[]> {
+    return Observable.from([this.users]);
+  }
+
+
+  get(id: number): Observable<User> {
+    return Observable.from(this.users.filter((value) => value.id === id));
+  }
+
+  save(entity: User): Observable<User> {
+    this.users.push(entity);
+    return Observable.from([entity]);
+  }
+
+  delete(id: number): Observable<number> {
+    this.users = this.users.filter((value) => value.id !== id);
+    return Observable.from([id]);
   }
 }

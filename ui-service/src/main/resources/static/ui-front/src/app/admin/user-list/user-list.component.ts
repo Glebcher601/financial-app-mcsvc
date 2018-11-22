@@ -1,19 +1,19 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {User} from "../../core/domain/user";
-import {MatPaginator, MatRow, MatSort, MatTableDataSource} from '@angular/material';
-import {UsersService} from "../../core/services/users.service";
+import {MatDialog, MatPaginator, MatRow, MatSort, MatTableDataSource} from '@angular/material';
+import {UsersMockTestService} from "../../core/services/users.service";
 import {FilterService} from "../../core/services/filter.service";
 import {UserFormComponent} from "../user-form/user-form.component";
+import {filter, first} from "rxjs/operators";
+import {DeleteDialogComponent} from "../../shared/delete-dialog/delete-dialog.component";
 
 @Component({
   selector: 'app-user-list',
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.css']
 })
-export class UserListComponent implements OnInit {
-
-  rowSelected: User;
+export class UserListComponent implements OnInit, AfterViewInit {
   userDataSource: MatTableDataSource<User>;
   columns = [
     {
@@ -41,29 +41,42 @@ export class UserListComponent implements OnInit {
       (array: string[], column: any) => {
         array.push(column['key']);
         return array;
-      }, [])];
+      }, []), "deleteButton"];
   filterValue: string;
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(UserFormComponent) userFormComponent: UserFormComponent;
 
-  constructor(private router: Router,
+  constructor(private dialog: MatDialog,
+              private router: Router,
               private activeRoute: ActivatedRoute,
-              private usersService: UsersService,
+              private usersService: UsersMockTestService,
               private filterService: FilterService) {
 
     this.userDataSource = new MatTableDataSource<User>();
   }
 
   ngOnInit() {
-    this.usersService.getAll().subscribe(data => {
-      this.userDataSource.data = data;
-    });
+    this.userFormComponent.showFormBehaviorSubject
+        .pipe(filter<boolean>(value => !value))
+        .subscribe(value => this.populateDataTable());
 
     this.filterService.userFilterValue.subscribe(data => this.filterValue = data);
     if (this.filterValue) {
       this.applyFilter(this.filterValue);
     }
+  }
+
+  ngAfterViewInit(): void {
+    this.userDataSource.paginator = this.paginator;
+    this.userDataSource.sort = this.sort;
+  }
+
+  private populateDataTable(): void {
+    this.usersService.getAll().pipe(first()).subscribe(data => {
+      this.userDataSource.data = data;
+    });
   }
 
   applyFilter(filterValue: string) {
@@ -72,11 +85,25 @@ export class UserListComponent implements OnInit {
   }
 
   addUser(): void {
-    this.router.navigate(['addPerson'], {relativeTo: this.activeRoute});
+    this.showUserFormComponent(new User);
   }
 
   selectRow(row: MatRow) {
-    this.userFormComponent.userBehaviourSubject.next(<User> row.valueOf());
+    this.showUserFormComponent(<User> row.valueOf());
+  }
+
+  private showUserFormComponent(user: User): void {
+    this.userFormComponent.userBehaviourSubject.next(user);
+  }
+
+  openDeleteDialog(user: User) {
+    const dialogRef = this.dialog.open(DeleteDialogComponent, {data: user});
+
+    dialogRef.afterClosed()
+        .pipe(filter(data => data))
+        .subscribe(data =>
+            this.usersService.delete(user.id)
+                .subscribe(deleted => this.populateDataTable()));
   }
 
 }

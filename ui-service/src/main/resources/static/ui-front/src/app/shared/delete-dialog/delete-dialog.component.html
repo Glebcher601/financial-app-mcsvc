@@ -1,0 +1,6 @@
+<h2 mat-dialog-title>Delete?</h2>
+<mat-dialog-content>Are you sure you want to user "{{data.login}}"?</mat-dialog-content>
+<mat-dialog-actions align="center">
+    <button mat-button mat-dialog-close>No</button>
+    <button mat-raised-button color="warn" [mat-dialog-close]="data">Yes</button>
+</mat-dialog-actions>

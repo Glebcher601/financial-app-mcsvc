@@ -4,7 +4,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {PERMISSIONS, UserFormConstants} from "../../core/domain/constants";
 import {PasswordValidator} from "../../core/validator/common-validators";
 import {User} from "../../core/domain/user";
-import {UsersService} from "../../core/services/users.service";
+import {UsersMockTestService} from "../../core/services/users.service";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {Subscription} from "rxjs/Subscription";
 
@@ -15,8 +15,7 @@ import {Subscription} from "rxjs/Subscription";
 })
 export class UserFormComponent implements OnInit {
   userForm: FormGroup;
-  user: User;
-  userBehaviourSubject: BehaviorSubject<User> = new BehaviorSubject(this.user);
+  userBehaviourSubject: BehaviorSubject<User> = new BehaviorSubject(null);
   userSubscription: Subscription;
   showFormBehaviorSubject: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
@@ -25,7 +24,7 @@ export class UserFormComponent implements OnInit {
   constructor(private formBuilder: FormBuilder,
               private router: Router,
               private activeRoute: ActivatedRoute,
-              private usersService: UsersService) {
+              private usersService: UsersMockTestService) {
     this.createForm();
   }
 
@@ -36,7 +35,16 @@ export class UserFormComponent implements OnInit {
   }
 
   save() {
+    const formModel = this.userForm.value;
+    const user = new User;
 
+    user.id = formModel.userId;
+    user.enabled = formModel.isEnabled;
+    user.login = formModel.login;
+    user.password = formModel.password;
+    user.permissionGroup = formModel.permissionGroup;
+
+    this.usersService.save(user).subscribe(user => this.hideForm());
   }
 
   populateForm(user: User) {

@@ -5,6 +5,7 @@ import {UserListComponent} from './user-list/user-list.component';
 import {AdminRoutingModule} from "./admin-routing.module";
 import {MaterialModule} from "../material.module";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {SharedModule} from "../shared/shared.module";
 
 @NgModule({
   imports: [
@@ -12,7 +13,8 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
     MaterialModule,
     FormsModule,
     ReactiveFormsModule,
-    AdminRoutingModule
+    AdminRoutingModule,
+    SharedModule
   ],
   declarations: [
     UserFormComponent,

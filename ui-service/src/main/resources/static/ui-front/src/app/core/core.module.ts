@@ -7,7 +7,7 @@ import {RouterModule} from "@angular/router";
 import {MaterialModule} from "../material.module";
 import {HeaderComponent} from "./header/header.component";
 import {FilterService} from "./services/filter.service";
-import {UsersService} from "./services/users.service";
+import {UsersMockTestService} from "./services/users.service";
 import {HttpClientModule} from '@angular/common/http';
 
 @NgModule({
@@ -34,7 +34,7 @@ import {HttpClientModule} from '@angular/common/http';
   ],
   providers: [
     FilterService,
-    UsersService
+    UsersMockTestService
   ]
 })
 export class CoreModule {

@@ -13,11 +13,20 @@
             </mat-form-field>
 
             <mat-paginator #paginator [pageSize]="25" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
-            <mat-table #rangeTable [dataSource]="userDataSource" matSort matSortActive="id" matSortDirection="asc">
+            <mat-table #rangeTable [dataSource]="userDataSource" matSort>
                 <!-- Main Columns -->
                 <ng-container *ngFor="let column of columns" [matColumnDef]="column.key">
                     <mat-header-cell *matHeaderCellDef mat-sort-header>{{ column.header }}</mat-header-cell>
                     <mat-cell *matCellDef="let row; let i = index">{{ column.cell(row, i) }}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="deleteButton">
+                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                    <mat-cell *matCellDef="let row">
+                        <button mat-button (click)="openDeleteDialog(row); $event.stopPropagation();">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </mat-cell>
                 </ng-container>
 
                 <mat-header-row *matHeaderRowDef="displayColumns"></mat-header-row>
