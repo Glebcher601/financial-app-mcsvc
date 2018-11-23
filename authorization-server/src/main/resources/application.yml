@@ -1,0 +1,16 @@
+spring:
+  profiles:
+    active: dev
+
+---
+
+spring:
+  profiles: dev
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/userDB
+    username: sa
+    password: sa
+    driver-class-name: org.h2.Driver
+
+jdbc:
+  connectionPool: 10

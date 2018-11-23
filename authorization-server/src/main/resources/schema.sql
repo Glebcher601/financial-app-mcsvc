@@ -71,3 +71,12 @@ CREATE TABLE ClientDetails (
   autoApproveScopes      VARCHAR(255)
 );
 
+DROP TABLE IF EXISTS "User";
+CREATE TABLE "User" (
+  id         BIGINT PRIMARY KEY,
+  login      VARCHAR(255) UNIQUE,
+  password   VARCHAR(255),
+  enabled    BOOLEAN,
+  permission VARCHAR(255)
+);
+

@@ -47,8 +47,7 @@ open class AuthServerOAuth2Configuration : AuthorizationServerConfigurerAdapter(
     }
 
     override fun configure(endpoints: AuthorizationServerEndpointsConfigurer) {
-        endpoints
-                .tokenStore(tokenStore())
+        endpoints.tokenStore(tokenStore())
                 .authenticationManager(authenticationManager);
     }
 
