@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "login": "user1_UPD",
+    "password": "password1_UPD",
+    "enabled": true,
+    "permission": "USER"
+  },
+  {
+    "id": 2,
+    "login": "user2",
+    "password": "password2",
+    "enabled": true,
+    "permission": "USER"
+  },
+  {
+    "id": 3,
+    "login": "user3",
+    "password": "password3",
+    "enabled": true,
+    "permission": "USER"
+  },
+  {
+    "id": 4,
+    "login": "admin",
+    "password": "admin",
+    "enabled": true,
+    "permission": "ADMIN"
+  },
+  {
+    "id": 5,
+    "login": "superadmin",
+    "password": "superadmin",
+    "enabled": true,
+    "permission": "SUPER_ADMIN"
+  }
+]

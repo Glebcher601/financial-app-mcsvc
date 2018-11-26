@@ -57,6 +57,8 @@ dependencies {
     implementation('com.fasterxml.jackson.module:jackson-module-kotlin')
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+    compile("io.jsonwebtoken:jjwt:0.7.0")
+
 
     runtimeOnly('org.springframework.boot:spring-boot-devtools')
     runtimeOnly('com.h2database:h2')

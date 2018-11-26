@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "login": "user1",
+    "password": "password1",
+    "enabled": true,
+    "permission": "USER"
+  },
+  {
+    "id": 2,
+    "login": "user2",
+    "password": "password2",
+    "enabled": true,
+    "permission": "USER"
+  },
+  {
+    "id": 3,
+    "login": "user3",
+    "password": "password3",
+    "enabled": true,
+    "permission": "USER"
+  },
+  {
+    "id": 4,
+    "login": "admin",
+    "password": "admin",
+    "enabled": true,
+    "permission": "ADMIN"
+  },
+  {
+    "id": 5,
+    "login": "superadmin",
+    "password": "superadmin",
+    "enabled": true,
+    "permission": "SUPER_ADMIN"
+  },
+  {
+    "id": 6,
+    "login": "user4",
+    "password": "user4",
+    "enabled": true,
+    "permission": "USER"
+  }
+]

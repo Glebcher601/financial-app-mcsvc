@@ -3,15 +3,16 @@ package com.nixsolutions.userservice.domain
 import javax.persistence.*
 
 @Entity
-data class User(@Id
-                @GeneratedValue(strategy = GenerationType.IDENTITY)
-                val id: Long,
-                @Column(nullable = false, unique = true)
-                val login: String,
-                val password: String,
-                val enabled: Boolean,
-                val permission: String //Just for now
-)
+data class User(@Column(nullable = false, unique = true)
+                var login: String,
+                var password: String,
+                var enabled: Boolean,
+                var permission: String //Just for now
+) {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  var id: Long = 0
+}
 
 @Entity
 @Deprecated("Not implemented!")
