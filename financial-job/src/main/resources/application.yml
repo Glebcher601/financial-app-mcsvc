@@ -34,11 +34,6 @@ services:
       resolution: LOCAL
       port: 8889
       version: 0.1
-    -
-      name: ui
-      resolution: LOCAL
-      port: 8890
-      version: 0.1
 
 ---
 

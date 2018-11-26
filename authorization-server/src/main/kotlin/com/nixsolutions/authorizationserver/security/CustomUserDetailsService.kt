@@ -1,6 +1,6 @@
 package com.nixsolutions.authorizationserver.security
 
-import com.nixsolutions.authorizationserver.repository.UserRepository
+import com.nixsolutions.authorizationserver.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component
 class CustomUserDetailsService : UserDetailsService {
 
     @Autowired
-    private lateinit var userRepository: UserRepository;
+    private lateinit var userService: UserService;
 
     override fun loadUserByUsername(userName: String): UserDetails {
-        val user = userRepository.findByLogin(userName);
-        return CustomUserPrincipal(user ?: throw RuntimeException("User not found"));
+        val user = userService.findUserByLogin(userName);
+        return CustomUserPrincipal(user.block() ?: throw RuntimeException("User not found"));
     }
 }

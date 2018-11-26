@@ -1,8 +1,9 @@
 package com.nixsolutions.financial.discovery;
 
-import static com.nixsolutions.financial.discovery.DiscoveryType.LOCAL;
 import lombok.Getter;
 import lombok.Setter;
+
+import static com.nixsolutions.financial.discovery.DiscoveryType.LOCAL;
 
 @Getter
 @Setter
@@ -17,6 +18,7 @@ public class ServiceRegistry
     public static final String UI = "ui";
     public static final String PREDICTION = "prediction";
     public static final String USER_AUTH = "userAuth";
+    public static final String USERS = "user-service";
   }
 
   private static final String HTTP_SCHEME = "http://";

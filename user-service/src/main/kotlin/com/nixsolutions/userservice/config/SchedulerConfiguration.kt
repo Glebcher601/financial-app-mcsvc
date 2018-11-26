@@ -1,4 +1,4 @@
-package com.nixsolutions.authorizationserver.config
+package com.nixsolutions.userservice.config
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
@@ -13,7 +13,7 @@ open class SchedulerConfiguration(
         private var connectionPoolSize: Int) {
 
     @Bean
-    open fun jdbcScheduler(): Scheduler {
+    fun jdbcScheduler(): Scheduler {
         return Schedulers.fromExecutor(Executors.newFixedThreadPool(connectionPoolSize));
     }
 

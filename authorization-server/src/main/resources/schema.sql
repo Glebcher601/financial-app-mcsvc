@@ -80,3 +80,10 @@ CREATE TABLE "User" (
   permission VARCHAR(255)
 );
 
+DROP TABLE IF EXISTS Authority;
+CREATE TABLE Authority (
+  id          BIGINT PRIMARY KEY,
+  name VATCHAR(255) UNIQUE,
+  description VARCHAR(255)
+)
+
