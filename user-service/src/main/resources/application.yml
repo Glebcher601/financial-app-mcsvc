@@ -5,6 +5,9 @@ spring:
     hibernate:
       ddl-auto: none
 
+server:
+  port: 8991
+
 jdbc:
   connectionPool: 10
 

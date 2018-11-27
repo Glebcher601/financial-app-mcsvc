@@ -12,7 +12,7 @@ data class User(val id: Long,
                 val permission: String //Just for now
 )
 
-data class CustomUserPrincipal(private val user: User) : UserDetails {
+data class CustomUserDetails(private val user: User) : UserDetails {
 
   init {
     if (user.id.equals(0))

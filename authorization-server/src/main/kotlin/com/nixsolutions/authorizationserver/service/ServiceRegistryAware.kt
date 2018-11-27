@@ -11,8 +11,8 @@ interface ServiceRegistryAware {
   }
 
   fun composePath(vararg pathElements: String): String {
-    val uri = UriComponentsBuilder.fromHttpUrl(getServiceUrl());
-    pathElements.forEachIndexed { _, pathElement -> uri.path(pathElement) }
+    val uri = UriComponentsBuilder.fromHttpUrl(getServiceUrl())
+    uri.pathSegment(*pathElements)
     return uri.toUriString()
   }
 

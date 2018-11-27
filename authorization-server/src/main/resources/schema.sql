@@ -1,3 +1,4 @@
+/*
 DROP TABLE IF EXISTS oauth_client_details;
 CREATE TABLE oauth_client_details (
   client_id               VARCHAR(255) PRIMARY KEY,
@@ -83,7 +84,8 @@ CREATE TABLE "User" (
 DROP TABLE IF EXISTS Authority;
 CREATE TABLE Authority (
   id          BIGINT PRIMARY KEY,
-  name VATCHAR(255) UNIQUE,
+  name VARCHAR(255) UNIQUE,
   description VARCHAR(255)
 )
+*/
 

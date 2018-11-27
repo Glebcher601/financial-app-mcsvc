@@ -4,13 +4,16 @@ spring:
 
 jdbc:
   connectionPool: 10
+server:
+  port: 8992
+
 
 ---
 
 spring:
   profiles: dev
   datasource:
-    url: jdbc:h2:tcp://localhost/~/userDB
+    url: jdbc:h2:tcp://localhost/~/tokenDB
     username: sa
     password: sa
     driver-class-name: org.h2.Driver
@@ -19,15 +22,20 @@ services:
     -
       name: user-service
       resolution: LOCAL
-      port: 8890
+      port: 8991
       version: 0.1
+security:
+  jwt:
+    secret: DEV_SECRET
+    expiresIn: 3600000
+
 
 ---
 
 spring:
   profiles: stage
   datasource:
-      url: jdbc:h2:tcp://userdb/~/userDB
+      url: jdbc:h2:tcp://tokenDB/~/tokenDB
       username: ${USER_DB_USERNAME}
       password: ${USER_DB_PASSWORD}
       driver-class-name: org.h2.Driver
@@ -36,5 +44,9 @@ services:
     -
       name: user-service
       resolution: CLUSTER
-      port: 8890
+      port: 8991
       version: 0.1
+security:
+  jwt:
+    secret: ${JWT_SECRET}
+    expiresIn: ${JWT_EXPIRES_IN}
