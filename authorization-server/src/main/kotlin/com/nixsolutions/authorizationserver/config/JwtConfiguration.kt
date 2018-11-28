@@ -4,8 +4,10 @@ import com.nixsolutions.authorizationserver.security.jwt.JwtAuthenticationEntryP
 import com.nixsolutions.authorizationserver.security.jwt.JwtAuthenticationFilter
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Profile
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.BeanIds
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
@@ -15,6 +17,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.NoOpPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
@@ -35,9 +38,12 @@ class JwtConfiguration : WebSecurityConfigurerAdapter() {
   @Autowired
   private lateinit var jwtFilter: JwtAuthenticationFilter;
 
+  @Autowired
+  private lateinit var passwordEncoder: PasswordEncoder;
+
   override fun configure(auth: AuthenticationManagerBuilder) {
     auth.userDetailsService(customUserDetailsService)
-        .passwordEncoder(passwordEncoder())
+        .passwordEncoder(passwordEncoder)
   }
 
   @Bean(BeanIds.AUTHENTICATION_MANAGER)
@@ -68,7 +74,7 @@ class JwtConfiguration : WebSecurityConfigurerAdapter() {
             "/**/*.css",
             "/**/*.js")
         .permitAll()
-        .antMatchers("/api/v0/auth/**")
+        .antMatchers("/api/v0/**")
         .permitAll()
         .anyRequest()
         .authenticated()
@@ -77,7 +83,14 @@ class JwtConfiguration : WebSecurityConfigurerAdapter() {
   }
 
   @Bean
-  fun passwordEncoder(): PasswordEncoder {
+  @Profile("dev")
+  fun noOpENcoder(): PasswordEncoder {
     return NoOpPasswordEncoder.getInstance()
+  }
+
+  @Bean
+  @Profile("stage")
+  fun bCryptEncoder(@Value("\${security.passwordHashingStrength}") strength: Int): PasswordEncoder {
+    return BCryptPasswordEncoder(10)
   }
 }

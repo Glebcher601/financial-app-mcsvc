@@ -1,12 +1,18 @@
 package com.nixsolutions.authorizationserver.security.jwt
 
 import com.nixsolutions.authorizationserver.security.CustomUserDetails
-import io.jsonwebtoken.*
+import io.jsonwebtoken.ExpiredJwtException
+import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.MalformedJwtException
+import io.jsonwebtoken.SignatureAlgorithm
+import io.jsonwebtoken.SignatureException
+import io.jsonwebtoken.UnsupportedJwtException
 import org.apache.commons.lang3.StringUtils.isEmpty
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Component
+import java.lang.Long.parseLong
 import java.util.*
 
 
@@ -22,9 +28,7 @@ class JwtTokenProvider(
   fun generateToken(authentication: Authentication): String {
 
     val userPrincipal = authentication.principal as CustomUserDetails
-
-    val now = Date()
-    val expiryDate = Date(now.getTime() + expiresIn)
+    val expiryDate = Date(Date().time + expiresIn)
 
     return Jwts.builder()
         .setSubject(java.lang.Long.toString(userPrincipal.getId()))
@@ -40,14 +44,13 @@ class JwtTokenProvider(
         .parseClaimsJws(token)
         .body
 
-    return java.lang.Long.parseLong(claims.subject)
+    return parseLong(claims.subject)
   }
 
   fun validateToken(authToken: String): Boolean {
     if (isEmpty(authToken)) {
       return false;
     }
-
 
     try {
       Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken)

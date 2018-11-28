@@ -3,11 +3,11 @@ package com.nixsolutions.authorizationserver.controller
 import com.nixsolutions.authorizationserver.security.jwt.JwtTokenProvider
 import com.nixsolutions.authorizationserver.security.payload.JwtTokenResponse
 import com.nixsolutions.authorizationserver.security.payload.LoginRequest
+import com.nixsolutions.authorizationserver.security.payload.toUserPasswordToken
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.AuthenticationManager
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.config.BeanIds
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.PostMapping
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController
 import javax.validation.Valid
 
 @RestController
-@RequestMapping(path = ["/api/v0/auth"])
+@RequestMapping(path = ["/api/v0"])
 class JwtAuthenticationController {
 
   @Autowired
@@ -29,11 +29,7 @@ class JwtAuthenticationController {
 
   @PostMapping(path = ["/login"])
   fun authenticateUser(@Valid @RequestBody loginRequest: LoginRequest): ResponseEntity<JwtTokenResponse> {
-    val authentication = authenticationManager.authenticate(
-        UsernamePasswordAuthenticationToken(
-            loginRequest.userName,
-            loginRequest.password))
-
+    val authentication = authenticationManager.authenticate(loginRequest.toUserPasswordToken())
     SecurityContextHolder.getContext().authentication = authentication
 
     val jwtTokenResponse = JwtTokenResponse(tokenProvider.generateToken(authentication))

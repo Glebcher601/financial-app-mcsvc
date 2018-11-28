@@ -27,8 +27,7 @@ services:
 security:
   jwt:
     secret: DEV_SECRET
-    expiresIn: 3600000
-
+    expiresIn: 86400
 
 ---
 
@@ -50,3 +49,4 @@ security:
   jwt:
     secret: ${JWT_SECRET}
     expiresIn: ${JWT_EXPIRES_IN}
+  passwordHashingStrength: ${PASSWORD_HASH_STERNGTH}
