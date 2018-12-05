@@ -1,4 +1,4 @@
-package com.nixsolutions.financial.security;
+package com.nixsolutions.financial.security.exception;
 
 public class InvalidTokenException extends RuntimeException
 {

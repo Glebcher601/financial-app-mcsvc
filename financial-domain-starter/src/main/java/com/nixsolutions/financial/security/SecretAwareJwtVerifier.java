@@ -1,9 +1,14 @@
 package com.nixsolutions.financial.security;
 
+import static com.nixsolutions.financial.security.SecurityConstants.ROLE;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
+import com.nixsolutions.financial.security.exception.InvalidTokenException;
+import com.nixsolutions.financial.security.exception.NoAccessException;
+import com.nixsolutions.financial.security.exception.TokenExpiredException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 
@@ -19,9 +24,19 @@ public class SecretAwareJwtVerifier implements JwtVerifier
   }
 
   @Override
-  public boolean hasAccess(String token, String roleNeeded) throws InvalidTokenException
+  public AccessDecision hasAccess(Claims claims, String roleNeeded) throws NoAccessException, TokenExpiredException
   {
-    return false;
+    if (isExpired(claims))
+    {
+      return AccessDecision.rejectWithError(new TokenExpiredException());
+    }
+
+    if (!StringUtils.equals(claims.get(ROLE).toString(), roleNeeded))
+    {
+      return AccessDecision.rejectWithError(new NoAccessException("Insufficient user role to access desired resource"));
+    }
+
+    return AccessDecision.grantAccess();
   }
 
   @Override
@@ -34,12 +49,11 @@ public class SecretAwareJwtVerifier implements JwtVerifier
 
     try
     {
-      return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJwt(token).getBody();
+      return Jwts.parser().setSigningKey(jwtSecret.getBytes()).parseClaimsJws(token).getBody();
     }
     catch (Exception ex)
     {
       throw new InvalidTokenException();
     }
   }
-
 }

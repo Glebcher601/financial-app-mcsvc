@@ -1,10 +1,16 @@
 package com.nixsolutions.financial.security;
 
+import java.util.Date;
 import io.jsonwebtoken.Claims;
 
 public interface JwtVerifier
 {
-  boolean hasAccess(String token, String roleNeeded);
+  AccessDecision hasAccess(Claims claims, String roleNeeded);
+
+  default boolean isExpired(Claims claims)
+  {
+    return claims.getExpiration().toInstant().isBefore(new Date().toInstant());
+  }
 
   Claims parseToken(String token);
 }
