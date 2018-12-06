@@ -1,8 +1,10 @@
 package com.nixsolutions.userservice.endpoint
 
+import com.nixsolutions.financial.security.aspect.JwtProtected
 import com.nixsolutions.userservice.domain.User
 import com.nixsolutions.userservice.misc.async
 import com.nixsolutions.userservice.repository.UserRepository
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -19,6 +21,10 @@ import reactor.core.publisher.Mono
 @RequestMapping(path = ["/users"])
 class UserResource {
 
+  companion object {
+    val LOG = LoggerFactory.getLogger(UserResource::class.java);
+  }
+
   @Autowired
   private lateinit var userRepository: UserRepository;
 
@@ -27,6 +33,7 @@ class UserResource {
     return async { userRepository.findAll() }.flatMapMany { list -> Flux.fromIterable(list) };
   }
 
+  @JwtProtected(roles = ["ADMIN"])
   @GetMapping(path = ["/{id}"])
   fun getById(@PathVariable id: Long): Mono<User> {
     return async { userRepository.findById(id).orElseThrow { RuntimeException() } }
