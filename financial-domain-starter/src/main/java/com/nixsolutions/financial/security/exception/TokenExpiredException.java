@@ -4,6 +4,7 @@ public class TokenExpiredException extends RuntimeException
 {
   public TokenExpiredException()
   {
+    this("Token expired");
   }
 
   public TokenExpiredException(String s)

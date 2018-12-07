@@ -4,6 +4,7 @@ public class NoAccessException extends RuntimeException
 {
   public NoAccessException()
   {
+    this("No acces to the resource");
   }
 
   public NoAccessException(String s)

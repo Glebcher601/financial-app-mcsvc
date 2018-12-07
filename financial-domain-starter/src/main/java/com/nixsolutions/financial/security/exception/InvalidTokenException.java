@@ -4,6 +4,7 @@ public class InvalidTokenException extends RuntimeException
 {
   public InvalidTokenException()
   {
+    this("Token has invalid structure or is counterfeit");
   }
 
   public InvalidTokenException(String s)

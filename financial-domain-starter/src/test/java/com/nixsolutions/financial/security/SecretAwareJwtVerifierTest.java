@@ -1,6 +1,6 @@
 package com.nixsolutions.financial.security;
 
-import static com.nixsolutions.financial.security.SecurityConstants.ROLE;
+import static com.nixsolutions.financial.security.SecurityConstants.ROLES;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.time.Instant;
@@ -83,14 +83,14 @@ public class SecretAwareJwtVerifierTest
         Arguments.of(
             "return exceptional if expired",
             (Executable) () -> new SecretAwareJwtVerifier("SECRET")
-                .hasAccess(createExpiredClaims(), "USER")
+                .hasAccess(createExpiredClaims(), new String[]{"USER"})
                 .throwUnderlyingException(),
             TokenExpiredException.class
         ),
         Arguments.of(
             "return exceptional if has no access",
             (Executable) () -> new SecretAwareJwtVerifier("SECRET")
-                .hasAccess(createClaims(), "ADMIN")
+                .hasAccess(createClaims(), new String[]{"ADMIN"})
                 .throwUnderlyingException(),
             NoAccessException.class
         )
@@ -100,7 +100,7 @@ public class SecretAwareJwtVerifierTest
   private Claims createClaims()
   {
     Claims claims = new DefaultClaims();
-    claims.put(ROLE, "USER");
+    claims.put(ROLES, "USER");
     claims.setExpiration(new Date(Instant.now().plus(500, ChronoUnit.HOURS).toEpochMilli()));
     return claims;
   }
@@ -108,7 +108,7 @@ public class SecretAwareJwtVerifierTest
   private Claims createExpiredClaims()
   {
     Claims claims = new DefaultClaims();
-    claims.put(ROLE, "USER");
+    claims.put(ROLES, "USER");
     claims.setExpiration(new Date(Instant.now().minus(100, ChronoUnit.HOURS).toEpochMilli()));
     return claims;
   }

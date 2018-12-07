@@ -1,8 +1,9 @@
 package com.nixsolutions.financial.security;
 
-import static com.nixsolutions.financial.security.SecurityConstants.ROLE;
+import static com.nixsolutions.financial.security.SecurityConstants.ROLES;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
-import org.apache.commons.lang3.StringUtils;
+import java.util.Base64;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -18,20 +19,15 @@ public class SecretAwareJwtVerifier implements JwtVerifier
 {
   private String jwtSecret;
 
-  public SecretAwareJwtVerifier(@Value("financialDomain.security.jwtSecret") String jwtSecret)
+  public SecretAwareJwtVerifier(@Value("${financialDomain.security.jwtSecret}") String jwtSecret)
   {
     this.jwtSecret = jwtSecret;
   }
 
   @Override
-  public AccessDecision hasAccess(Claims claims, String roleNeeded) throws NoAccessException, TokenExpiredException
+  public AccessDecision hasAccess(Claims claims, String[] rolesNeeded) throws NoAccessException, TokenExpiredException
   {
-    if (isExpired(claims))
-    {
-      return AccessDecision.rejectWithError(new TokenExpiredException());
-    }
-
-    if (!StringUtils.equals(claims.get(ROLE).toString(), roleNeeded))
+    if (!ArrayUtils.contains(rolesNeeded, claims.get(ROLES)))
     {
       return AccessDecision.rejectWithError(new NoAccessException("Insufficient user role to access desired resource"));
     }
@@ -49,7 +45,10 @@ public class SecretAwareJwtVerifier implements JwtVerifier
 
     try
     {
-      return Jwts.parser().setSigningKey(jwtSecret.getBytes()).parseClaimsJws(token).getBody();
+      return Jwts.parser()
+          .setSigningKey(jwtSecret.getBytes())
+          .parseClaimsJws(token)
+          .getBody();
     }
     catch (Exception ex)
     {

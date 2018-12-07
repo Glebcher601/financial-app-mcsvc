@@ -5,7 +5,7 @@ import io.jsonwebtoken.Claims;
 
 public interface JwtVerifier
 {
-  AccessDecision hasAccess(Claims claims, String roleNeeded);
+  AccessDecision hasAccess(Claims claims, String[] rolesNeeded);
 
   default boolean isExpired(Claims claims)
   {

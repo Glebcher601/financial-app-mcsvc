@@ -1,6 +1,7 @@
 package com.nixsolutions.authorizationserver.security.jwt
 
 import com.nixsolutions.authorizationserver.security.CustomUserDetails
+import com.nixsolutions.financial.security.SecurityConstants
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.MalformedJwtException
@@ -11,9 +12,12 @@ import org.apache.commons.lang3.StringUtils.isEmpty
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.core.Authentication
+import org.springframework.security.core.GrantedAuthority
 import org.springframework.stereotype.Component
 import java.lang.Long.parseLong
+import java.time.Duration
 import java.util.*
+import java.util.stream.Collectors.toList
 
 
 @Component
@@ -28,13 +32,17 @@ class JwtTokenProvider(
   fun generateToken(authentication: Authentication): String {
 
     val userPrincipal = authentication.principal as CustomUserDetails
-    val expiryDate = Date(Date().time + expiresIn)
+    val expiryDate = Date(Date().time + Duration.ofSeconds(expiresIn.toLong()).toMillis())
+
+    val roles = userPrincipal.authorities.stream().map(GrantedAuthority::getAuthority).collect(toList())
 
     return Jwts.builder()
         .setSubject(java.lang.Long.toString(userPrincipal.getId()))
+        .claim(SecurityConstants.NAME, userPrincipal.username)
+        .claim(SecurityConstants.ROLES, roles)
         .setIssuedAt(Date())
         .setExpiration(expiryDate)
-        .signWith(SignatureAlgorithm.HS512, jwtSecret)
+        .signWith(SignatureAlgorithm.HS512, jwtSecret.toByteArray())
         .compact()
   }
 
