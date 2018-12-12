@@ -39,7 +39,7 @@ security:
   jwt:
     secret: ${JWT_SECRET}
     expiresIn: ${JWT_EXPIRES_IN}
-  passwordHashingStrength: ${PASSWORD_HASH_STERNGTH}
+    passwordHashingStrength: ${PASSWORD_HASH_STERNGTH}
 
 financialDomain:
   security:

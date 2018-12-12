@@ -81,13 +81,6 @@ public class SecretAwareJwtVerifierTest
   {
     return Stream.of(
         Arguments.of(
-            "return exceptional if expired",
-            (Executable) () -> new SecretAwareJwtVerifier("SECRET")
-                .hasAccess(createExpiredClaims(), new String[]{"USER"})
-                .throwUnderlyingException(),
-            TokenExpiredException.class
-        ),
-        Arguments.of(
             "return exceptional if has no access",
             (Executable) () -> new SecretAwareJwtVerifier("SECRET")
                 .hasAccess(createClaims(), new String[]{"ADMIN"})

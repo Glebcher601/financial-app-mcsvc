@@ -52,7 +52,7 @@ public class SecretAwareJwtVerifier implements JwtVerifier
     }
     catch (Exception ex)
     {
-      throw new InvalidTokenException();
+      throw new InvalidTokenException(ex);
     }
   }
 }

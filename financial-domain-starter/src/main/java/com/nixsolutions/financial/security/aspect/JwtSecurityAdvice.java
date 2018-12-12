@@ -1,21 +1,23 @@
 package com.nixsolutions.financial.security.aspect;
 
-import static com.nixsolutions.financial.security.SecurityConstants.BEARER_TYPE;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import com.nixsolutions.financial.security.JwtVerifier;
+import com.nixsolutions.financial.security.exception.InvalidTokenException;
+import io.jsonwebtoken.Claims;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import com.nixsolutions.financial.security.JwtVerifier;
-import com.nixsolutions.financial.security.exception.InvalidTokenException;
-import io.jsonwebtoken.Claims;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import static com.nixsolutions.financial.security.SecurityConstants.BEARER_TYPE;
 
 /**
  * We should have @RequestHeader parameter for aspect to fire
@@ -59,11 +61,17 @@ public class JwtSecurityAdvice
         .boxed()
         .collect(Collectors.toMap(i -> parameters[i], i -> args[i]));
 
-    return params.entrySet().stream()
-        .filter(entry -> authHeaderMethodParamIdentifier.test(entry.getKey()))
-        .findAny()
-        .map(entry -> entry.getValue().toString())
-        .map(headerValue -> headerValue.substring(BEARER_TYPE.length(), headerValue.length()));
+    try
+    {
+      return params.entrySet().stream()
+          .filter(entry -> authHeaderMethodParamIdentifier.test(entry.getKey()))
+          .findAny()
+          .map(entry -> entry.getValue().toString())
+          .map(headerValue -> headerValue.substring(BEARER_TYPE.length(), headerValue.length()));
+    } catch (Exception e)
+    {
+      return Optional.empty();
+    }
   }
 
   private Method getMethod(ProceedingJoinPoint joinPoint)

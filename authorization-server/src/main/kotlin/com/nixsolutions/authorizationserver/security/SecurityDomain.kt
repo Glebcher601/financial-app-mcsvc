@@ -1,15 +1,18 @@
 package com.nixsolutions.authorizationserver.security
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
+import java.util.stream.Collectors
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class User(val id: Long,
                 val login: String,
                 val password: String,
                 val enabled: Boolean,
-                val permission: String //Just for now
+                val permissions: Set<Permission> //Just for now
 )
 
 data class CustomUserDetails(private val user: User) : UserDetails {
@@ -51,10 +54,11 @@ data class CustomUserDetails(private val user: User) : UserDetails {
 
   @JsonProperty
   override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
-    return mutableListOf(SimpleGrantedAuthority(user.permission))
+    return user.permissions.stream()
+        .map { SimpleGrantedAuthority(it.key) }
+        .collect(Collectors.toList())
   }
 }
 
-data class Permission(val id: Long,
-                      val key: String,
-                      val description: String)
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class Permission(val key: String)

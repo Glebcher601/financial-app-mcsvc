@@ -2,12 +2,7 @@ package com.nixsolutions.authorizationserver.security.jwt
 
 import com.nixsolutions.authorizationserver.security.CustomUserDetails
 import com.nixsolutions.financial.security.SecurityConstants
-import io.jsonwebtoken.ExpiredJwtException
-import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.MalformedJwtException
-import io.jsonwebtoken.SignatureAlgorithm
-import io.jsonwebtoken.SignatureException
-import io.jsonwebtoken.UnsupportedJwtException
+import io.jsonwebtoken.*
 import org.apache.commons.lang3.StringUtils.isEmpty
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -77,5 +72,4 @@ class JwtTokenProvider(
 
     return false
   }
-
 }

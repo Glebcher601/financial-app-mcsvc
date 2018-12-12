@@ -3,7 +3,6 @@
     "id": 1,
     "login": "user1",
     "password": "password1",
-    "enabled": true,
-    "permission": "USER"
+    "enabled": true
   }
 ]

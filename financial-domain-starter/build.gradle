@@ -38,6 +38,7 @@ dependencies {
     compileOnly('org.springframework.boot:spring-boot-starter-webflux:2.1.0.RELEASE')
     compile group: 'org.hibernate', name: 'hibernate-validator', version:'5.4.1.Final'
 
+    testCompile('org.springframework.boot:spring-boot-starter-test:2.1.0.RELEASE')
     testCompile 'org.junit.jupiter:junit-jupiter-params:5.1.0'
     testCompile 'org.junit.jupiter:junit-jupiter-api:5.1.0'
     testCompile 'org.junit.jupiter:junit-jupiter-engine:5.1.0'
