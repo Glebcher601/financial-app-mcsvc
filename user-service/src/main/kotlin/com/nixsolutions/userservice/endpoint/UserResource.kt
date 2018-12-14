@@ -5,7 +5,14 @@ import com.nixsolutions.userservice.misc.async
 import com.nixsolutions.userservice.repository.UserRepository
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
@@ -21,38 +28,32 @@ class UserResource {
   private lateinit var userRepository: UserRepository;
 
   @GetMapping
-  //@JwtProtected(roles = ["SUPERADMIN", "ADMIN", "SYSTEM"])
-  fun getAll(@RequestHeader Authorization: String): Flux<User> {
+  fun getAll(): Flux<User> {
     return async { userRepository.findAll() }.flatMapMany { list -> Flux.fromIterable(list) };
   }
 
-  //@JwtProtected(roles = ["SUPERADMIN", "ADMIN", "SYSTEM"])
   @GetMapping(path = ["/{id}"])
-  fun getById(@RequestHeader Authorization: String, @PathVariable id: Long): Mono<User> {
+  fun getById(@PathVariable id: Long): Mono<User> {
     return async { userRepository.findById(id).orElseThrow { RuntimeException() } }
   }
 
-  //@JwtProtected(roles = ["SUPERADMIN", "ADMIN", "SYSTEM"])
   @GetMapping(path = ["/byLogin/{login}"])
-  fun getByLogin(@RequestHeader Authorization: String, @PathVariable login: String): Mono<User> {
+  fun getByLogin(@PathVariable login: String): Mono<User> {
     return async { userRepository.findByLogin(login)!! };
   }
 
-  //@JwtProtected(roles = ["SUPERADMIN", "ADMIN", "SYSTEM"])
   @PostMapping
-  fun create(@RequestHeader Authorization: String, @RequestBody user: User): Mono<User> {
+  fun create(@RequestBody user: User): Mono<User> {
     return async { userRepository.save(user) }
   }
 
-  //@JwtProtected(roles = ["SUPERADMIN", "ADMIN", "SYSTEM"])
   @PutMapping
-  fun update(@RequestHeader Authorization: String, @RequestBody user: User): Mono<User> {
+  fun update(@RequestBody user: User): Mono<User> {
     return async { userRepository.save(user) }
   }
 
-  //@JwtProtected(roles = ["SUPERADMIN", "ADMIN", "SYSTEM"])
   @DeleteMapping(path = ["/{id}"])
-  fun deleteById(@RequestHeader Authorization: String, @PathVariable id: Long): Mono<Unit> {
+  fun deleteById(@PathVariable id: Long): Mono<Unit> {
     return async { userRepository.deleteById(id) }
   }
 
