@@ -29,6 +29,15 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.nixsolutions</groupId>
+            <artifactId>financial-domain-starter</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
@@ -83,19 +92,16 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.nixsolutions</groupId>
-            <artifactId>financial-domain-starter</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
             <groupId>com.github.sbrannen</groupId>
             <artifactId>spring-test-junit5</artifactId>
             <version>1.3.1</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-params</artifactId>
             <version>5.1.0</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
