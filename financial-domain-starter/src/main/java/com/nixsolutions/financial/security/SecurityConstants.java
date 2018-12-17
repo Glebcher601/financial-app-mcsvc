@@ -6,4 +6,6 @@ public interface SecurityConstants
   String NAME= "name";
   String BEARER_TYPE = "Bearer";
   String AUTHORIZATION = "Authorization";
+  String PERMISSIONS = "permissions";
+  String ROLE = "role";
 }
