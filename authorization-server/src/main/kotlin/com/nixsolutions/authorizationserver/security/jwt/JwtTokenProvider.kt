@@ -2,10 +2,11 @@ package com.nixsolutions.authorizationserver.security.jwt
 
 import com.nixsolutions.authorizationserver.security.CustomUserDetails
 import com.nixsolutions.financial.security.SecurityConstants
+import com.nixsolutions.financial.security.SecurityProperties
 import io.jsonwebtoken.*
 import org.apache.commons.lang3.StringUtils.isEmpty
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Value
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.stereotype.Component
@@ -17,17 +18,15 @@ import java.util.stream.Collectors.toList
 
 @Component
 class JwtTokenProvider(
-    @Value("\${security.jwt.secret}")
-    private val jwtSecret: String,
-    @Value("\${security.jwt.expiresIn}")
-    private val expiresIn: Int) {
+    @Autowired
+    val securityProperties: SecurityProperties) {
 
   private val logger = LoggerFactory.getLogger(JwtTokenProvider::class.java)
 
   fun generateToken(authentication: Authentication): String {
 
     val userPrincipal = authentication.principal as CustomUserDetails
-    val expiryDate = Date(Date().time + Duration.ofSeconds(expiresIn.toLong()).toMillis())
+    val expiryDate = Date(Date().time + Duration.ofSeconds(securityProperties.expiresIn.toLong()).toMillis())
 
     val roles = userPrincipal.authorities.stream().map(GrantedAuthority::getAuthority).collect(toList())
 
@@ -37,13 +36,13 @@ class JwtTokenProvider(
         .claim(SecurityConstants.ROLES, roles)
         .setIssuedAt(Date())
         .setExpiration(expiryDate)
-        .signWith(SignatureAlgorithm.HS512, jwtSecret.toByteArray())
+        .signWith(SignatureAlgorithm.HS512, securityProperties.jwtSecret.toByteArray())
         .compact()
   }
 
   fun getUserIdFromJWT(token: String): Long {
     val claims = Jwts.parser()
-        .setSigningKey(jwtSecret)
+        .setSigningKey(securityProperties.jwtSecret)
         .parseClaimsJws(token)
         .body
 
@@ -56,7 +55,7 @@ class JwtTokenProvider(
     }
 
     try {
-      Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken)
+      Jwts.parser().setSigningKey(securityProperties.jwtSecret).parseClaimsJws(authToken)
       return true
     } catch (ex: SignatureException) {
       logger.error("Invalid JWT signature")

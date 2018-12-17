@@ -1,12 +1,14 @@
 package com.nixsolutions.financial.security.aspect;
 
-import java.lang.reflect.Parameter;
-import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestHeader;
 
+import java.lang.reflect.Parameter;
+import java.util.Optional;
+
 @Component
+@Deprecated
 public class DefaultAuthorizationHeaderMethodParamIdentifier implements AuthorizationHeaderMethodParamIdentifier
 {
   @Override

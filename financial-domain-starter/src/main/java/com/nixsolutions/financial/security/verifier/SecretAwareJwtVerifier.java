@@ -1,27 +1,28 @@
-package com.nixsolutions.financial.security;
+package com.nixsolutions.financial.security.verifier;
 
-import static com.nixsolutions.financial.security.SecurityConstants.ROLES;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-import java.util.Base64;
-import org.apache.commons.lang3.ArrayUtils;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Component;
+import com.nixsolutions.financial.security.AccessDecision;
+import com.nixsolutions.financial.security.SecurityProperties;
 import com.nixsolutions.financial.security.exception.InvalidTokenException;
 import com.nixsolutions.financial.security.exception.NoAccessException;
 import com.nixsolutions.financial.security.exception.TokenExpiredException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import org.apache.commons.lang3.ArrayUtils;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Component;
+
+import static com.nixsolutions.financial.security.SecurityConstants.ROLES;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @Component
-@ConditionalOnProperty(prefix = "financialDomain", name = "security.jwtSecret")
+@ConditionalOnProperty(prefix = "financial-domain.security", name = "jwtSecret")
 public class SecretAwareJwtVerifier implements JwtVerifier
 {
-  private String jwtSecret;
+  private SecurityProperties securityProperties;
 
-  public SecretAwareJwtVerifier(@Value("${financialDomain.security.jwtSecret}") String jwtSecret)
+  public SecretAwareJwtVerifier(SecurityProperties securityProperties)
   {
-    this.jwtSecret = jwtSecret;
+    this.securityProperties = securityProperties;
   }
 
   @Override
@@ -46,7 +47,7 @@ public class SecretAwareJwtVerifier implements JwtVerifier
     try
     {
       return Jwts.parser()
-          .setSigningKey(jwtSecret.getBytes())
+          .setSigningKey(securityProperties.getJwtSecret().getBytes())
           .parseClaimsJws(token)
           .getBody();
     }

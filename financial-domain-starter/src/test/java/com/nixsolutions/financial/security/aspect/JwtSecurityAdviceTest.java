@@ -1,11 +1,11 @@
 package com.nixsolutions.financial.security.aspect;
 
 import com.nixsolutions.financial.security.JwtValidationConfiguration;
-import com.nixsolutions.financial.security.JwtVerifier;
-import com.nixsolutions.financial.security.SecretAwareJwtVerifier;
 import com.nixsolutions.financial.security.SecuredService;
 import com.nixsolutions.financial.security.exception.InvalidTokenException;
 import com.nixsolutions.financial.security.exception.NoAccessException;
+import com.nixsolutions.financial.security.verifier.JwtVerifier;
+import com.nixsolutions.financial.security.verifier.SecretAwareJwtVerifier;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;

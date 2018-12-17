@@ -1,0 +1,13 @@
+D:\Software\IDEA projects\financial-app-mcsvc\storage-service\src\main\java\com\nixsolutions\storageservice\persistence\repository\StockSnapshotRepositoryCustom.java
+D:\Software\IDEA projects\financial-app-mcsvc\storage-service\src\main\java\com\nixsolutions\storageservice\persistence\repository\SequnceGeneratorAware.java
+D:\Software\IDEA projects\financial-app-mcsvc\storage-service\src\main\java\com\nixsolutions\storageservice\misc\mongoinit\impl\DevSetupMongoSequenceInitializer.java
+D:\Software\IDEA projects\financial-app-mcsvc\storage-service\src\main\java\com\nixsolutions\storageservice\resource\StockSnapshotResource.java
+D:\Software\IDEA projects\financial-app-mcsvc\storage-service\src\main\java\com\nixsolutions\storageservice\domain\StockSnapshot.java
+D:\Software\IDEA projects\financial-app-mcsvc\storage-service\src\main\java\com\nixsolutions\storageservice\persistence\MongoSequence.java
+D:\Software\IDEA projects\financial-app-mcsvc\storage-service\src\main\java\com\nixsolutions\storageservice\StorageServiceApplication.java
+D:\Software\IDEA projects\financial-app-mcsvc\storage-service\src\main\java\com\nixsolutions\storageservice\persistence\DbSequenceService.java
+D:\Software\IDEA projects\financial-app-mcsvc\storage-service\src\main\java\com\nixsolutions\storageservice\misc\mongoinit\MongoSequenceInitializer.java
+D:\Software\IDEA projects\financial-app-mcsvc\storage-service\src\main\java\com\nixsolutions\storageservice\persistence\repository\impl\StockSnapshotRepositoryCustomImpl.java
+D:\Software\IDEA projects\financial-app-mcsvc\storage-service\src\main\java\com\nixsolutions\storageservice\persistence\repository\StockSnapshotRepository.java
+D:\Software\IDEA projects\financial-app-mcsvc\storage-service\src\main\java\com\nixsolutions\storageservice\domain\SymbolStockSnapshots.java
+D:\Software\IDEA projects\financial-app-mcsvc\storage-service\src\main\java\com\nixsolutions\storageservice\persistence\IdGenService.java

@@ -1,12 +1,10 @@
 package com.nixsolutions.financial.security;
 
-import static com.nixsolutions.financial.security.SecurityConstants.ROLES;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.stream.Stream;
+import com.nixsolutions.financial.security.exception.InvalidTokenException;
+import com.nixsolutions.financial.security.exception.NoAccessException;
+import com.nixsolutions.financial.security.verifier.SecretAwareJwtVerifier;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.impl.DefaultClaims;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -14,11 +12,15 @@ import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import com.nixsolutions.financial.security.exception.InvalidTokenException;
-import com.nixsolutions.financial.security.exception.NoAccessException;
-import com.nixsolutions.financial.security.exception.TokenExpiredException;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.impl.DefaultClaims;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+import java.util.stream.Stream;
+
+import static com.nixsolutions.financial.security.SecurityConstants.ROLES;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class SecretAwareJwtVerifierTest

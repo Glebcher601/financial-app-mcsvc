@@ -2,7 +2,6 @@ package com.nixsolutions.userservice.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.apache.commons.lang3.builder.HashCodeBuilder
-import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import java.util.stream.Collectors
@@ -16,13 +15,14 @@ open class User(@Id
                 var id: Long,
                 @Column(nullable = false, unique = true)
                 var login: String,
+                @Column(name = "password")
                 var password_: String,
                 var enabled: Boolean,
                 @ManyToMany(fetch = FetchType.EAGER)
                 @JoinTable(name = "USER_PERMISSION",
                     joinColumns = [JoinColumn(name = "user_id")],
                     inverseJoinColumns = [JoinColumn(name = "permission_id")])
-                var permissions: Set<Permission>
+                var permissions: MutableSet<Permission>
 ) {
   constructor(user: User) : this(user.id, user.login, user.password_, user.enabled, user.permissions) {
   }
@@ -36,7 +36,7 @@ open class Permission(@Id
                       var description: String,
                       @JsonIgnore
                       @ManyToMany(mappedBy = "permissions")
-                      var users: Set<User>
+                      var users: MutableSet<User>
 ) {
   override fun hashCode(): Int {
     return HashCodeBuilder.reflectionHashCode(this, mutableListOf("users"))

@@ -1,7 +1,7 @@
 package com.nixsolutions.financial.security.aspect;
 
-import com.nixsolutions.financial.security.JwtVerifier;
 import com.nixsolutions.financial.security.exception.InvalidTokenException;
+import com.nixsolutions.financial.security.verifier.JwtVerifier;
 import io.jsonwebtoken.Claims;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -24,6 +24,7 @@ import static com.nixsolutions.financial.security.SecurityConstants.BEARER_TYPE;
  */
 @Aspect
 @Component
+@Deprecated
 public class JwtSecurityAdvice
 {
   private final AuthorizationHeaderMethodParamIdentifier authHeaderMethodParamIdentifier;
