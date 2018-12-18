@@ -1,33 +1,12 @@
 package com.nixsolutions.financial.security.aspect;
 
-import com.nixsolutions.financial.security.JwtValidationConfiguration;
-import com.nixsolutions.financial.security.SecuredService;
-import com.nixsolutions.financial.security.exception.InvalidTokenException;
-import com.nixsolutions.financial.security.exception.NoAccessException;
-import com.nixsolutions.financial.security.verifier.JwtVerifier;
-import com.nixsolutions.financial.security.verifier.SecretAwareJwtVerifier;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.function.Executable;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import java.util.stream.Stream;
-
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+/*@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(SpringExtension.class)
 @Configuration
-@ContextConfiguration(classes = JwtValidationConfiguration.class)
+@ContextConfiguration(classes = JwtValidationConfiguration.class)*/
 public class JwtSecurityAdviceTest
 {
-  @Autowired
+/*  @Autowired
   SecuredService securedService;
 
   @ParameterizedTest(name = "Should {0}")
@@ -67,5 +46,5 @@ public class JwtSecurityAdviceTest
   public JwtVerifier jwtVerifier()
   {
     return new SecretAwareJwtVerifier("SECRET");
-  }
+  }*/
 }

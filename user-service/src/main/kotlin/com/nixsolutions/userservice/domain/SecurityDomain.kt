@@ -1,11 +1,20 @@
 package com.nixsolutions.userservice.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonProperty
 import org.apache.commons.lang3.builder.HashCodeBuilder
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import java.util.stream.Collectors
-import javax.persistence.*
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.FetchType
+import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
+import javax.persistence.Id
+import javax.persistence.JoinColumn
+import javax.persistence.JoinTable
+import javax.persistence.ManyToMany
 
 typealias SpringSecUser = org.springframework.security.core.userdetails.User;
 
@@ -16,6 +25,7 @@ open class User(@Id
                 @Column(nullable = false, unique = true)
                 var login: String,
                 @Column(name = "password")
+                @JsonProperty("password")
                 var password_: String,
                 var enabled: Boolean,
                 @ManyToMany(fetch = FetchType.EAGER)

@@ -1,31 +1,9 @@
 package com.nixsolutions.financial.security;
 
-import com.nixsolutions.financial.security.exception.InvalidTokenException;
-import com.nixsolutions.financial.security.exception.NoAccessException;
-import com.nixsolutions.financial.security.verifier.SecretAwareJwtVerifier;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.impl.DefaultClaims;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.function.Executable;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.stream.Stream;
-
-import static com.nixsolutions.financial.security.SecurityConstants.ROLES;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+/*@TestInstance(TestInstance.Lifecycle.PER_CLASS)*/
 public class SecretAwareJwtVerifierTest
 {
-  @Test
+  /*@Test
   public void shouldProduceExceptionOnWrongToken()
   {
     //given
@@ -106,5 +84,5 @@ public class SecretAwareJwtVerifierTest
     claims.put(ROLES, "USER");
     claims.setExpiration(new Date(Instant.now().minus(100, ChronoUnit.HOURS).toEpochMilli()));
     return claims;
-  }
+  }*/
 }

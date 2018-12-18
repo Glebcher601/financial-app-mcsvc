@@ -10,16 +10,18 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.server.reactive.ServerHttpRequest
+import org.springframework.security.authentication.ReactiveAuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.config.web.server.SecurityWebFiltersOrder
 import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.web.server.SecurityWebFilterChain
+import org.springframework.security.web.server.authentication.AuthenticationWebFilter
 import org.springframework.security.web.server.authentication.ServerAuthenticationConverter
 import org.springframework.stereotype.Component
 import org.springframework.web.server.ServerWebExchange
 import reactor.core.publisher.Mono
-
 
 @Configuration
 class WebSecurityConfig {
@@ -30,7 +32,19 @@ class WebSecurityConfig {
   @Bean
   fun springSecurityFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
 
-    return http.authorizeExchange().anyExchange().permitAll().and().build();
+    val bearerAuthenticationFilter = AuthenticationWebFilter(ReactiveAuthenticationManager { auth -> Mono.just(auth) })
+    bearerAuthenticationFilter.setServerAuthenticationConverter(jwtAuthenticationConverter)
+
+    return http.authorizeExchange()
+        .and()
+        .authorizeExchange()
+        .pathMatchers("/protected").authenticated()
+        .and()
+        .addFilterAt(bearerAuthenticationFilter, SecurityWebFiltersOrder.AUTHENTICATION)
+        .authorizeExchange()
+        .anyExchange().permitAll()
+        .and()
+        .build()
   }
 }
 
@@ -57,8 +71,8 @@ fun getJwtFromRequest(request: ServerHttpRequest): String? {
 }
 
 fun toAuthenticationMono(claims: Claims): Mono<Authentication> {
-  val permissions = claims.get(PERMISSIONS, Array<String>::class.java).asList()
-      .map { SimpleGrantedAuthority(it) }
+  val permissions = claims.get(PERMISSIONS, ArrayList::class.java)
+      .map { SimpleGrantedAuthority(it.toString()) }
 
   return Mono.justOrEmpty(claims.subject)
       .map { UsernamePasswordAuthenticationToken(it, null, permissions) }

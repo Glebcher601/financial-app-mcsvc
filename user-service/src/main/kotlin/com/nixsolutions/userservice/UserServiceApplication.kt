@@ -4,6 +4,7 @@ import com.nixsolutions.financial.security.EnableEndpointJwtAuthorization
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
+import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity
 import org.springframework.web.reactive.config.EnableWebFlux
 
@@ -11,6 +12,7 @@ import org.springframework.web.reactive.config.EnableWebFlux
 @SpringBootApplication
 @EnableWebFlux
 @EnableWebFluxSecurity
+@EnableReactiveMethodSecurity
 @EnableEndpointJwtAuthorization
 class UserServiceApplication
 
