@@ -20,22 +20,15 @@ repositories {
      maven { url "http://repo.maven.apache.org/maven2" }
 }
 
-/*dependencyManagement {
-    imports {
-        mavenBom "io.projectreactor:reactor-bom:Californium-SR3"
-    }
-}*/
 //TODO cleanup dependencies. They look awful
 dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version:'2.1.0.RELEASE'
     compile group: 'org.springframework.boot', name: 'spring-boot-configuration-processor', version:'2.1.0.RELEASE'
     compile group: 'org.apache.commons', name: 'commons-lang3', version:'3.5'
-    compile 'org.springframework:spring-aop:5.0.1.RELEASE'
-    compile 'org.aspectj:aspectjweaver:1.8.12'
     compile("io.jsonwebtoken:jjwt:0.7.0")
-    //compile 'io.projectreactor:reactor-core'
     compileOnly('org.projectlombok:lombok:1.18.4')
     compileOnly('org.springframework.boot:spring-boot-starter-webflux:2.1.0.RELEASE')
+    implementation('org.springframework.boot:spring-boot-starter-security:2.1.0.RELEASE')
     compile group: 'org.hibernate', name: 'hibernate-validator', version:'5.4.1.Final'
 
     testCompile('org.springframework.boot:spring-boot-starter-test:2.1.0.RELEASE')

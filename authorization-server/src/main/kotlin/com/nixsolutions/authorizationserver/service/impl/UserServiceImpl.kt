@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service
 private const val USERS_RESOURCE = "/users";
 private const val BY_LOGIN_RESOURCE = "/byLogin";
 
+@Deprecated("")
 @Service
 class UserServiceImpl : UserService {
 

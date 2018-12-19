@@ -12,3 +12,15 @@ class ProtectedResource {
   @PreAuthorize("hasAuthority('admin_permission')")
   fun protected() = Mono.just("PROTECTED")
 }
+
+/*@Configuration
+class ProtectedResource {
+
+  @Bean
+  fun protectedResourceRoute(): RouterFunction<ServerResponse> =
+      RouterFunctions.route()
+          .GET("/protected")
+          @PreAuthorize("hasAuthority('admin_permission')")
+          { req -> ServerResponse.ok().body(BodyInserters.fromObject("protected"))}
+          .build()
+}*/

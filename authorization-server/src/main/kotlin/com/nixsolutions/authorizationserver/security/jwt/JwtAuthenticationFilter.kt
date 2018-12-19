@@ -1,6 +1,6 @@
 package com.nixsolutions.authorizationserver.security.jwt
 
-import com.nixsolutions.authorizationserver.security.CustomUserDetailsService
+/*import com.nixsolutions.authorizationserver.security.CustomUserDetailsService
 import com.nixsolutions.authorizationserver.security.payload.BEARER_TOKEN
 import org.apache.commons.lang3.StringUtils.EMPTY
 import org.apache.commons.lang3.StringUtils.isNotEmpty
@@ -51,4 +51,4 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
     } else EMPTY
   }
 
-}
+}*/
