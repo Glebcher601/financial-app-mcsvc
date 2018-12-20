@@ -15,7 +15,7 @@ class CustomReactiveUserDetailsService : ReactiveUserDetailsService, ServiceRegi
 
   lateinit var serviceRegistry: ServiceRegistry;
 
-  override fun findByUsername(userName: String?): Mono<UserDetails> =
+  override fun findByUsername(userName: String): Mono<UserDetails> =
       getWebClient(composePath("users", "byLogin", userName))
           .get().retrieve()
           .bodyToMono(User::class.java)

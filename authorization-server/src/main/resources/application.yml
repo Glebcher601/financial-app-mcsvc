@@ -23,6 +23,8 @@ financial-domain:
   security:
     expiresIn: 86400
     jwtSecret: DEV_SECRET
+    #Not used now
+    passwordHashingStrength: 10
 
 ---
 
@@ -39,4 +41,5 @@ financial-domain:
   security:
     jwtSecret: ${JWT_SECRET}
     expiresIn: ${JWT_EXPIRES_IN}
+    #Not used now
     passwordHashingStrength: ${PASSWORD_HASH_STERNGTH}

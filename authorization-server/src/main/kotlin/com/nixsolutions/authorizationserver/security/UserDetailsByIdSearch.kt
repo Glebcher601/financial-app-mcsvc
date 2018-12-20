@@ -2,6 +2,7 @@ package com.nixsolutions.authorizationserver.security
 
 import com.nixsolutions.authorizationserver.service.UserByIdSearch
 
+@Deprecated("")
 interface UserDetailsByIdSearch : UserByIdSearch {
 
   fun loadUserDetailsById(id: Long): CustomUserDetails {

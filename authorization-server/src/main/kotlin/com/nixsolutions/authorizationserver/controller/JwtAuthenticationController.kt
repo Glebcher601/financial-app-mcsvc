@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import javax.validation.Valid
 
+@Deprecated("o_O")
 @RestController
 @RequestMapping(path = ["/api/v0"])
 class JwtAuthenticationController {

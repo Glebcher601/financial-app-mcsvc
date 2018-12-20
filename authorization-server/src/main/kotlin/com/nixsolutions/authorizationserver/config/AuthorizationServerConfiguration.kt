@@ -14,9 +14,10 @@ class AuthorizationServerConfiguration {
   lateinit var reactiveUserDetailsService: ReactiveUserDetailsService;
 
   @Bean
-  fun basicAuthenticationFilter() {
+  fun basicAuthenticationFilter(): AuthenticationWebFilter {
     val reactiveAuthManager = UserDetailsRepositoryReactiveAuthenticationManager(reactiveUserDetailsService)
     val authenticationWebFilter = AuthenticationWebFilter(reactiveAuthManager)
+    return authenticationWebFilter;
   }
 
 }
