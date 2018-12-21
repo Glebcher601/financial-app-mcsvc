@@ -1,10 +1,10 @@
 package com.nixsolutions.financial.security.exception
 
-class InvalidTokenException : RuntimeException {
+import org.springframework.security.core.AuthenticationException
 
-  @JvmOverloads constructor(s: String = "Token has invalid structure or is counterfeit") : super(s) {}
+class InvalidTokenException : AuthenticationException {
 
-  constructor(s: String, throwable: Throwable) : super(s, throwable) {}
+  @JvmOverloads constructor(s: String = "Token has invalid structure or is counterfeit") : super(s)
 
-  constructor(throwable: Throwable) : super(throwable) {}
+  constructor(s: String, throwable: Throwable) : super(s, throwable)
 }

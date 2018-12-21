@@ -17,7 +17,7 @@ import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
 @RestController
-@RequestMapping(path = ["/users"])
+@RequestMapping(path = ["/api/users"])
 class UserResource {
 
   companion object {

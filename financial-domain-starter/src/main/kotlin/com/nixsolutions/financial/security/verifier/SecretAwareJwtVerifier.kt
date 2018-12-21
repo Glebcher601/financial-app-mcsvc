@@ -15,7 +15,7 @@ class SecretAwareJwtVerifier(private val securityProperties: SecurityProperties)
   @Throws(InvalidTokenException::class)
   override fun parseToken(token: String?): Claims {
     if (isEmpty(token)) {
-      throw InvalidTokenException()
+      throw InvalidTokenException("Token is empty!")
     }
 
     try {
@@ -24,7 +24,7 @@ class SecretAwareJwtVerifier(private val securityProperties: SecurityProperties)
           .parseClaimsJws(token)
           .body
     } catch (ex: Exception) {
-      throw InvalidTokenException(ex)
+      throw InvalidTokenException(ex.message ?: "Security exception", ex)
     }
   }
 }
