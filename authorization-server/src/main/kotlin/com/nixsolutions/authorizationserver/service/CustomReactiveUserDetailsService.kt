@@ -5,18 +5,19 @@ import com.nixsolutions.authorizationserver.security.User
 import com.nixsolutions.financial.discovery.ServiceRegistry
 import com.nixsolutions.financial.discovery.ServiceRegistry.Services.USERS
 import com.nixsolutions.financial.discovery.ServiceRegistryAware
+import com.nixsolutions.financial.security.properties.SystemJwtAuthenticationHolder
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
 
 @Component
-class CustomReactiveUserDetailsService : ReactiveUserDetailsService, ServiceRegistryAware {
-
-  lateinit var serviceRegistry: ServiceRegistry;
+class CustomReactiveUserDetailsService(var serviceRegistry: ServiceRegistry,
+                                       var jwtAuthenticationHolder: SystemJwtAuthenticationHolder) :
+    ReactiveUserDetailsService, ServiceRegistryAware {
 
   override fun findByUsername(userName: String): Mono<UserDetails> =
-      getWebClient(composePath("users", "byLogin", userName))
+      jwtAuthenticationHolder.getSystemWebClient(composePath("users", "byLogin", userName))
           .get().retrieve()
           .bodyToMono(User::class.java)
           .map { CustomUserDetails(it) }

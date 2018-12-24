@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 @EnableConfigurationProperties(ServiceDiscoveryProperties::class)
-@ConditionalOnProperty(prefix = "financialDomain", name = ["enableDiscovery"], matchIfMissing = false)
+@ConditionalOnProperty(prefix = "financialDomain", name = ["enableDiscovery"], matchIfMissing = true)
 class FinancialDomainConfiguration {
   @Bean
   fun serviceRegistry(discoveryConfig: ServiceDiscoveryProperties): ServiceRegistry {

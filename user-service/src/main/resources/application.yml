@@ -23,7 +23,9 @@ spring:
 
 financial-domain:
   security:
-    jwtSecret: DEV_SECRET
+    jwtProps:
+      jwtSecret: DEV_SECRET
+    systemToken: token
 
 ---
 

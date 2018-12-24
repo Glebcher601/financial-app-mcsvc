@@ -8,12 +8,14 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.server.ServerResponse
 import reactor.core.publisher.Mono
 
 @RestController
+@RequestMapping(path = ["/api/v0"])
 class JwtAuthenticationEndpoint {
 
   @Autowired
@@ -30,4 +32,7 @@ class JwtAuthenticationEndpoint {
 
   @PostMapping(path = ["/checkToken"])
   fun checkToken() = ServerResponse.ok().build()
+
+  //TODO signup
+  fun signUp() = null
 }

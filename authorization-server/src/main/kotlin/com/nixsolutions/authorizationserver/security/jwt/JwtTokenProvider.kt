@@ -2,7 +2,7 @@ package com.nixsolutions.authorizationserver.security.jwt
 
 import com.nixsolutions.authorizationserver.security.CustomUserDetails
 import com.nixsolutions.financial.security.SecurityConstants
-import com.nixsolutions.financial.security.SecurityProperties
+import com.nixsolutions.financial.security.properties.SecurityProperties
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import org.slf4j.LoggerFactory

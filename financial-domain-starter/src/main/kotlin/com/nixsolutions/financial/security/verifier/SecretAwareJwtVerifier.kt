@@ -1,7 +1,7 @@
 package com.nixsolutions.financial.security.verifier
 
-import com.nixsolutions.financial.security.SecurityProperties
 import com.nixsolutions.financial.security.exception.InvalidTokenException
+import com.nixsolutions.financial.security.properties.SecurityProperties
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import org.apache.commons.lang3.StringUtils.isEmpty

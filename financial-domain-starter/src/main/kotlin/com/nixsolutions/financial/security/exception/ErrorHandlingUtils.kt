@@ -20,7 +20,7 @@ fun getCustomErrorAttributes(message: String, request: ServerHttpRequest): Map<S
   return errorAttributes;
 }
 
-fun writeErrorResponse(exchange: ServerWebExchange, errorAttributes: Map<String, Any>) =
+fun writeJsonErrorResponse(exchange: ServerWebExchange, errorAttributes: Map<String, Any>) =
     exchange.response.writeWith(
         Jackson2JsonEncoder().encode(
             Mono.just(errorAttributes),
