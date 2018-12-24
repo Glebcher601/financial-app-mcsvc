@@ -63,6 +63,7 @@ dependencies {
     api('org.springframework.boot:spring-boot-starter-security')
 
     api group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
+    api group: 'com.google.guava', name: 'guava', version: '27.0-jre'
     api("io.jsonwebtoken:jjwt:0.7.0")
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")

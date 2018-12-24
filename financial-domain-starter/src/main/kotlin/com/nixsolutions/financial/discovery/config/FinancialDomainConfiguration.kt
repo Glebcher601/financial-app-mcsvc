@@ -1,4 +1,4 @@
-package com.nixsolutions.financial.config
+package com.nixsolutions.financial.discovery.config
 
 import com.nixsolutions.financial.discovery.ServiceDiscoveryProperties
 import com.nixsolutions.financial.discovery.ServiceRegistry

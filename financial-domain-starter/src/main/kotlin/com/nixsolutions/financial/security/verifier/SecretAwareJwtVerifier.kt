@@ -24,7 +24,7 @@ class SecretAwareJwtVerifier(private val securityProperties: SecurityProperties)
           .parseClaimsJws(token)
           .body
     } catch (ex: Exception) {
-      throw InvalidTokenException(ex.message ?: "Security exception", ex)
+      throw InvalidTokenException(ex.message ?: "Wrong token", ex)
     }
   }
 }

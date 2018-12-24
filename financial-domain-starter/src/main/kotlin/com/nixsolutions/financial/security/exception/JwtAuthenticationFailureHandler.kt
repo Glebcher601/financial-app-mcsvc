@@ -10,7 +10,7 @@ object JwtAuthenticationFailureHandler : ServerAuthenticationFailureHandler {
   override fun onAuthenticationFailure(webFilters: WebFilterExchange,
                                        exception: AuthenticationException): Mono<Void> {
     val response = webFilters.exchange.response
-    response.statusCode = HttpStatus.UNAUTHORIZED
+    response.statusCode = HttpStatus.FORBIDDEN
     val dataBuffer = response.bufferFactory().wrap((exception.message ?: "Security exception").toByteArray())
     return response.writeWith(Mono.just(dataBuffer))
   }
