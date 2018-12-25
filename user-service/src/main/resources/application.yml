@@ -23,7 +23,7 @@ spring:
 
 financial-domain:
   security:
-    jwtProps:
+    jwt-props:
       jwtSecret: DEV_SECRET
     systemToken: token
 

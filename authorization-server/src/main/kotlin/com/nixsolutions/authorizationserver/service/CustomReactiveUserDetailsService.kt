@@ -16,11 +16,13 @@ class CustomReactiveUserDetailsService(var serviceRegistry: ServiceRegistry,
                                        var jwtAuthenticationHolder: SystemJwtAuthenticationHolder) :
     ReactiveUserDetailsService, ServiceRegistryAware {
 
-  override fun findByUsername(userName: String): Mono<UserDetails> =
-      jwtAuthenticationHolder.getSystemWebClient(composePath("users", "byLogin", userName))
-          .get().retrieve()
-          .bodyToMono(User::class.java)
-          .map { CustomUserDetails(it) }
+  override fun findByUsername(userName: String): Mono<UserDetails> {
+    return jwtAuthenticationHolder.getSystemWebClient(composePath("api", "users", "byLogin", userName))
+        .get().retrieve()
+        .bodyToMono(User::class.java)
+        .map { CustomUserDetails(it) }
+  }
+
 
   override fun getServiceUrl() = serviceRegistry.getServiceUrl(USERS)
 }

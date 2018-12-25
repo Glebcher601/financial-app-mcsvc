@@ -13,6 +13,7 @@ import javax.validation.Valid
 //@Deprecated("o_O")
 //@RestController
 //@RequestMapping(path = ["/api/v0"])
+@Deprecated("")
 class JwtAuthenticationController {
 
   //@Autowired

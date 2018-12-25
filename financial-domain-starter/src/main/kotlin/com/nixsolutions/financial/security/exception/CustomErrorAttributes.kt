@@ -12,8 +12,8 @@ class CustomErrorAttributes<T : Throwable> : DefaultErrorAttributes() {
     val errorAttributes = super.getErrorAttributes(request, includeStackTrace)
     errorAttributes.remove("trace")
 
-    errorAttributes["status"] = HttpStatus.INTERNAL_SERVER_ERROR.toString()
-    errorAttributes["error"] = HttpStatus.FORBIDDEN.reasonPhrase
+    errorAttributes["status"] = HttpStatus.INTERNAL_SERVER_ERROR.value()
+    errorAttributes["error"] = HttpStatus.INTERNAL_SERVER_ERROR.reasonPhrase
     return errorAttributes
   }
 }

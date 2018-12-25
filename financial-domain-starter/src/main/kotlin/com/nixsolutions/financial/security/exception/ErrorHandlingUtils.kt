@@ -14,7 +14,7 @@ fun getCustomErrorAttributes(message: String, request: ServerHttpRequest): Map<S
   val errorAttributes = HashMap<String, Any>()
   errorAttributes["timestamp"] = Date()
   errorAttributes["message"] = message
-  errorAttributes["status"] = HttpStatus.UNAUTHORIZED.value()
+  errorAttributes["status"] = HttpStatus.FORBIDDEN.value()
   errorAttributes["path"] = request.path.toString()
 
   return errorAttributes;

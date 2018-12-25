@@ -20,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder
 //@Configuration
 //@EnableWebSecurity
 //@EnableGlobalMethodSecurity(securedEnabled = true, jsr250Enabled = true, prePostEnabled = true)
+@Deprecated("")
 class JwtConfiguration : WebSecurityConfigurerAdapter() {
 
   @Autowired
