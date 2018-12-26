@@ -22,15 +22,16 @@ import reactor.core.publisher.Mono
 
 @Configuration
 @ComponentScan(
-    "com.nixsolutions.financial.security.verifier",
     "com.nixsolutions.financial.security.properties",
-    "com.nixsolutions.financial.security.authentication",
     "com.nixsolutions.financial.security.exception")
 @EnableReactiveMethodSecurity
 @EnableWebFluxSecurity
 @EnableConfigurationProperties(SecurityProperties::class, SystemJwtAuthenticationHolder::class)
 class CommonJwtSecurityConfiguration
 
+@ComponentScan(
+    "com.nixsolutions.financial.security.verifier",
+    "com.nixsolutions.financial.security.authentication")
 @Configuration
 @Import(CommonJwtSecurityConfiguration::class)
 class DefaultJwtAuthorizationConfiguration {

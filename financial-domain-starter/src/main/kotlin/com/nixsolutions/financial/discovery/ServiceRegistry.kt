@@ -2,16 +2,14 @@ package com.nixsolutions.financial.discovery
 
 import com.nixsolutions.financial.discovery.DiscoveryType.LOCAL
 
+const val STORAGE = "storage"
+const val UI = "ui"
+const val PREDICTION = "prediction"
+const val USER_AUTH = "authorization-server"
+const val USERS = "user-service"
+
 class ServiceRegistry {
   var serviceDiscoveryProperties: ServiceDiscoveryProperties? = null
-
-  object Services {
-    val STORAGE = "storage"
-    val UI = "ui"
-    val PREDICTION = "prediction"
-    val USER_AUTH = "userAuth"
-    val USERS = "user-service"
-  }
 
   fun getServiceUrl(svcName: String): String {
     return this.serviceDiscoveryProperties!!.list.stream()
@@ -32,11 +30,7 @@ class ServiceRegistry {
     }
   }
 
-  companion object {
-
-    val COLON = ":"
-
+  private val COLON = ":"
     private val HTTP_SCHEME = "http://"
     private val LOCALHOST = "localhost"
-  }
 }

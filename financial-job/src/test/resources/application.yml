@@ -35,7 +35,11 @@ job:
   properties:
     cron: 0 0/1 * * * ?
     threads: 1
-
+financial-domain:
+  security:
+    jwt-props:
+      jwtSecret: DEV_SECRET
+    systemToken: token
 ---
 
 spring:

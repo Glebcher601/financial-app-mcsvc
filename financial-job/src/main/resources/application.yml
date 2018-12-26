@@ -18,6 +18,8 @@ spring:
   batch:
     job:
       enabled: false
+  profiles:
+      active: dev
 
 ---
 
@@ -34,6 +36,9 @@ services:
       resolution: LOCAL
       port: 8889
       version: 0.1
+financial-domain:
+  security:
+    systemToken: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJTWVNURU0iLCJuYW1lIjoic3lzdGVtIiwicGVybWlzc2lvbnMiOlsiYWRtaW5fcGVybWlzc2lvbiJdLCJpYXQiOjE1NDUxMjU0NTQsImV4cCI6OTk0NTIxMTgyOX0.gFWogYCpup_qxM1Z7pa_4cVEJQBpHDoMyScMwQWI7lCi7jr4AMdK5_0YSDhYvO2EQVNt9jxJ6G_37yBP2ah0fw
 
 ---
 
@@ -50,3 +55,6 @@ services:
       resolution: CLUSTER
       port: 8889
       version: 0.1
+financial-domain:
+  security:
+    systemToken: ${SYSTEM_JWT_TOKEN}

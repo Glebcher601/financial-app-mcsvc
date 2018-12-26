@@ -4,6 +4,7 @@ import com.nixsolutions.financial.security.exception.CustomAuthenticationFailure
 import com.nixsolutions.financial.security.exception.JwtAccessDeniedHandler
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.UserDetailsRepositoryReactiveAuthenticationManager
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder
@@ -14,6 +15,7 @@ import org.springframework.security.web.server.SecurityWebFilterChain
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter
 
 @Configuration
+@ComponentScan("com.nixsolutions.financial.security.verifier")
 class AuthorizationServerConfiguration {
 
   @Autowired

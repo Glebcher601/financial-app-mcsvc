@@ -3,8 +3,8 @@ package com.nixsolutions.authorizationserver.service
 import com.nixsolutions.authorizationserver.security.CustomUserDetails
 import com.nixsolutions.authorizationserver.security.User
 import com.nixsolutions.financial.discovery.ServiceRegistry
-import com.nixsolutions.financial.discovery.ServiceRegistry.Services.USERS
 import com.nixsolutions.financial.discovery.ServiceRegistryAware
+import com.nixsolutions.financial.discovery.USERS
 import com.nixsolutions.financial.security.properties.SystemJwtAuthenticationHolder
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService
 import org.springframework.security.core.userdetails.UserDetails

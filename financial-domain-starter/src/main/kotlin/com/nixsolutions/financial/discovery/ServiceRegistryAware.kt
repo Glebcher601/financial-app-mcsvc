@@ -7,12 +7,14 @@ interface ServiceRegistryAware {
 
   fun getServiceUrl(): String;
 
+  @JvmDefault
   fun getWebClient(uri: String): WebClient {
     return WebClient.builder()
         .baseUrl(uri)
         .build()
   }
 
+  @JvmDefault
   fun composePath(vararg pathElements: String): String {
     val uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(getServiceUrl())
     uriComponentsBuilder.pathSegment(*pathElements)

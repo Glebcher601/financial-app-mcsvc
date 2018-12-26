@@ -28,8 +28,12 @@ class JwtAuthenticationConverter(val jwtVerifier: JwtVerifier) : ServerAuthentic
 
 fun getJwtFromRequest(request: ServerHttpRequest): String? {
   val bearerToken = request.headers[SecurityConstants.AUTHORIZATION]?.first { it.startsWith(SecurityConstants.BEARER_TYPE) }
-  return if (bearerToken.isNullOrBlank()) "" else bearerToken?.substring(7, bearerToken.length)
+  return extractTokenValue(bearerToken)
 }
+
+fun extractTokenValue(bearerToken: String?) =
+    if (bearerToken.isNullOrBlank()) ""
+    else bearerToken?.substring(7, bearerToken.length)
 
 fun toAuthenticationMono(claims: Claims): Mono<Authentication> {
   val permissions = claims.get(SecurityConstants.PERMISSIONS, ArrayList::class.java)
