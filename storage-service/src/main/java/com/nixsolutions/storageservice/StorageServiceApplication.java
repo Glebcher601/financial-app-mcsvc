@@ -1,18 +1,19 @@
 package com.nixsolutions.storageservice;
 
-import java.util.Objects;
+import com.nixsolutions.financial.security.config.EnableJwtProtection;
+import com.nixsolutions.storageservice.misc.mongoinit.MongoSequenceInitializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
-import com.nixsolutions.financial.security.config.EnableJwtProtection;
-import com.nixsolutions.storageservice.misc.mongoinit.MongoSequenceInitializer;
+
+import java.util.Objects;
 
 @EnableMongoAuditing
 @SpringBootApplication
-@EnableJwtProtection
+@EnableJwtProtection(useDefault = false)
 public class StorageServiceApplication implements ApplicationListener<ApplicationReadyEvent>
 {
   @Autowired(required = false)
