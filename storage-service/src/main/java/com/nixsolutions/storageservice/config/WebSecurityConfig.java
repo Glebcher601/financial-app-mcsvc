@@ -2,16 +2,17 @@ package com.nixsolutions.storageservice.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import com.nixsolutions.financial.security.config.HttpSecurityConfigurationHolder;
 
 @Configuration
 public class WebSecurityConfig
 {
   @Bean
-  public SecurityWebFilterChain webFilterChain(/*@Qualifier("preConfiguredHttpSecurity") */ServerHttpSecurity http)
+  public SecurityWebFilterChain webFilterChain(HttpSecurityConfigurationHolder securityConfigurationHolder)
   {
-    return http.csrf().disable()
+    return securityConfigurationHolder.getHttpSecurity()
+        .csrf().disable()
         .authorizeExchange().anyExchange().permitAll()
         .and().build();
   }

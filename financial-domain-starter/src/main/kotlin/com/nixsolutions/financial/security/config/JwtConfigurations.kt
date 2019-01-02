@@ -38,18 +38,20 @@ class DefaultJwtAuthorizationConfiguration {
 
   @Bean
   fun preConfiguredHttpSecurity(httpSecurity: ServerHttpSecurity,
-                                jwtAuthenticationConverter: JwtAuthenticationConverter): ServerHttpSecurity {
+                                jwtAuthenticationConverter: JwtAuthenticationConverter): HttpSecurityConfigurationHolder {
     val bearerAuthenticationFilter = AuthenticationWebFilter(ReactiveAuthenticationManager(::decideToAuthenticate))
     bearerAuthenticationFilter.setServerAuthenticationConverter(jwtAuthenticationConverter)
     bearerAuthenticationFilter.setAuthenticationFailureHandler(CustomAuthenticationFailureHandler)
 
-    return httpSecurity
-        .exceptionHandling()
-        .accessDeniedHandler(JwtAccessDeniedHandler)
-        .and()
-        .authorizeExchange()
-        .and()
-        .addFilterAt(bearerAuthenticationFilter, SecurityWebFiltersOrder.AUTHENTICATION)
+    return HttpSecurityConfigurationHolder(
+        httpSecurity
+            .exceptionHandling()
+            .accessDeniedHandler(JwtAccessDeniedHandler)
+            .and()
+            .authorizeExchange()
+            .and()
+            .addFilterAt(bearerAuthenticationFilter, SecurityWebFiltersOrder.AUTHENTICATION))
+
   }
 }
 

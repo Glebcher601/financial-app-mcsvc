@@ -38,6 +38,12 @@ compileTestKotlin {
 	}
 }
 
+task unpack(type: Copy) {
+	dependsOn bootJar
+	from(zipTree(tasks.bootJar.outputs.files.singleFile))
+	into("build/dependency")
+}
+
 repositories {
 	mavenCentral()
 	maven { url 'https://jitpack.io' }

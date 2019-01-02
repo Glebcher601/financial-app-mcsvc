@@ -16,7 +16,7 @@ jdbc:
 spring:
   profiles: dev
   datasource:
-    url: jdbc:h2:tcp://localhost/~/userDB
+    url: jdbc:h2:tcp://${DEV_HOST_ADDRESS:localhost}/~/userDB
     username: sa
     password: sa
     driver-class-name: org.h2.Driver
@@ -36,5 +36,10 @@ spring:
       username: ${USER_DB_USERNAME}
       password: ${USER_DB_PASSWORD}
       driver-class-name: org.h2.Driver
+financial-domain:
+  security:
+    jwtProps:
+      jwtSecret: ${JWT_SECRET}
+    systemToken: ${SYSTEM_JWT_TOKEN}
 
 ---
