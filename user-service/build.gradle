@@ -5,12 +5,14 @@ buildscript {
 	}
 	repositories {
 		mavenCentral()
+		gradlePluginPortal()
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
 		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
 		classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
 		classpath("org.jetbrains.kotlin:kotlin-noarg:${kotlinVersion}")
+		classpath('gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.13.0')
 	}
 }
 
@@ -21,6 +23,7 @@ apply plugin: 'kotlin-spring'
 apply plugin: 'kotlin-jpa'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+apply plugin: 'com.palantir.docker'
 
 group = 'com.nixsolutions'
 version = '0.0.1-SNAPSHOT'
@@ -38,10 +41,18 @@ compileTestKotlin {
 	}
 }
 
+//Not used for now, but a good point for enhancement of startup performance(launch class files instead of fat jars)
 task unpack(type: Copy) {
 	dependsOn bootJar
 	from(zipTree(tasks.bootJar.outputs.files.singleFile))
 	into("build/dependency")
+}
+
+docker {
+	name 'userservice'
+	tags '${version}'
+	files tasks.bootJar.outputs
+	buildArgs(['JAR_ARTIFACT': tasks.bootJar.outputs.files.singleFile.name])
 }
 
 repositories {
