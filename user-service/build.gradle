@@ -28,6 +28,8 @@ apply plugin: 'com.palantir.docker'
 group = 'com.nixsolutions'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
+def explodedJarDir = "exploded"
+
 compileKotlin {
 	kotlinOptions {
 		freeCompilerArgs = ["-Xjsr305=strict"]
@@ -41,18 +43,17 @@ compileTestKotlin {
 	}
 }
 
-//Not used for now, but a good point for enhancement of startup performance(launch class files instead of fat jars)
 task unpack(type: Copy) {
 	dependsOn bootJar
 	from(zipTree(tasks.bootJar.outputs.files.singleFile))
-	into("build/dependency")
+	into("build/${explodedJarDir}")
 }
 
 docker {
 	name 'userservice'
 	tags '${version}'
-	files tasks.bootJar.outputs
-	buildArgs(['JAR_ARTIFACT': tasks.bootJar.outputs.files.singleFile.name])
+	copySpec.from(tasks.unpack.outputs).into("${explodedJarDir}")
+    buildArgs(['EXPLODED_JAR_DIR': "${explodedJarDir}"])
 }
 
 repositories {

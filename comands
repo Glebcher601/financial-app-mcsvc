@@ -1,2 +1,4 @@
 #h2 in server mode
 java -jar h2*.jar -web -webAllowOthers -tcp -tcpAllowOthers -browser
+
+#run docker container
