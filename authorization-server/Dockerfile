@@ -9,4 +9,4 @@ COPY ${EXPLODED_JAR_DIR}/META-INF /app/META-INF
 COPY ${EXPLODED_JAR_DIR}/BOOT-INF/classes /app
 EXPOSE 8991 5005
 ENV SPRING_PROFILES_ACTIVE=stage
-ENTRYPOINT ["sh", "-c", "java ${DEBUG_AGENT} -cp app:app/lib/* com.nixsolutions.userservice.UserServiceApplicationKt"]
+ENTRYPOINT ["sh", "-c", "java ${DEBUG_AGENT} -cp app:app/lib/* com.nixsolutions.authorizationserver.AuthorizationServerApplicationKt"]

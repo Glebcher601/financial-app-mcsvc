@@ -41,10 +41,11 @@ services:
       version: 0.1
 financial-domain:
   security:
-    jwtProps:
+    jwt-props:
       jwtSecret: ${JWT_SECRET}
       expiresIn: ${JWT_EXPIRES_IN}
     #Not used now
     passwordHashingStrength: ${PASSWORD_HASH_STERNGTH}
     systemToken: ${SYSTEM_JWT_TOKEN}
 
+---

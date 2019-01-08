@@ -12,7 +12,7 @@ buildscript {
 		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
 		classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
 		classpath("org.jetbrains.kotlin:kotlin-noarg:${kotlinVersion}")
-		classpath('gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.13.0')
+		classpath('gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.21.0')
 	}
 }
 
@@ -50,8 +50,7 @@ task unpack(type: Copy) {
 }
 
 docker {
-	name 'userservice'
-	tags '${version}'
+	name 'gcr.io/glebcher9812/userservice:'+version
 	copySpec.from(tasks.unpack.outputs).into("${explodedJarDir}")
     buildArgs(['EXPLODED_JAR_DIR': "${explodedJarDir}"])
 }
@@ -73,6 +72,7 @@ dependencies {
 
 	runtimeOnly('org.springframework.boot:spring-boot-devtools')
 	runtimeOnly('com.h2database:h2')
+	runtime 'mysql:mysql-connector-java:5.1.47'
 
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
 	testImplementation('io.projectreactor:reactor-test')

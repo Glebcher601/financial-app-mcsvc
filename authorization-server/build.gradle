@@ -6,12 +6,14 @@ buildscript {
     repositories {
         mavenCentral()
         mavenLocal()
+        gradlePluginPortal()
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
         classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
         classpath("org.jetbrains.kotlin:kotlin-noarg:${kotlinVersion}")
+        classpath('gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.13.0')
     }
 }
 
@@ -22,10 +24,25 @@ apply plugin: 'kotlin-spring'
 apply plugin: 'kotlin-jpa'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+apply plugin: 'com.palantir.docker'
 
 group = 'com.nixsolutions'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
+def explodedJarDir = "exploded"
+
+task unpack(type: Copy) {
+    dependsOn bootJar
+    from(zipTree(tasks.bootJar.outputs.files.singleFile))
+    into("build/${explodedJarDir}")
+}
+
+docker {
+    name 'gcr.io/glebcher9812/authorization-server:'+version
+    copySpec.from(tasks.unpack.outputs).into("${explodedJarDir}")
+    buildArgs(['EXPLODED_JAR_DIR': "${explodedJarDir}"])
+}
+
 compileKotlin {
     kotlinOptions {
         freeCompilerArgs = ["-Xjsr305=strict", "-Xjvm-default=enable"]
@@ -54,7 +71,6 @@ dependencies {
 
     runtimeOnly('org.springframework.boot:spring-boot-devtools')
 
-    //Test dependencies - do not know how to extract them to domain-starter
     testImplementation('org.springframework.boot:spring-boot-starter-test')
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.1.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.1.0'
