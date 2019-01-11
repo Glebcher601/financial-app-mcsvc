@@ -1,6 +1,6 @@
 spring:
-#  profiles:
-#    active: dev
+  profiles:
+    active: dev
   jpa:
     hibernate:
       ddl-auto: none
@@ -10,6 +10,23 @@ server:
 
 jdbc:
   connectionPool: 10
+
+management:
+  security:
+    enabled: false
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
 
 ---
 

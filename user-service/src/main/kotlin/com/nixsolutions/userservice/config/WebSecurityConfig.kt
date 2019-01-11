@@ -1,8 +1,10 @@
 package com.nixsolutions.userservice.config
 
 import com.nixsolutions.financial.security.config.HttpSecurityConfigurationHolder
+import org.springframework.boot.actuate.autoconfigure.security.reactive.EndpointRequest
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.web.server.SecurityWebFilterChain
 
 @Configuration
@@ -10,9 +12,9 @@ class WebSecurityConfig {
 
   @Bean
   fun springSecurityFilterChain(httpSecurityHolder: HttpSecurityConfigurationHolder): SecurityWebFilterChain {
-    return httpSecurityHolder.httpSecurity
+    return httpSecurityHolder.httpSecurity.csrf().disable()
         .authorizeExchange()
-        .pathMatchers("/protected").authenticated()
+        .matchers(EndpointRequest.toAnyEndpoint()).hasAuthority("ADMIN")
         .and()
         .authorizeExchange()
         .pathMatchers("/api/**").authenticated()
@@ -20,5 +22,19 @@ class WebSecurityConfig {
         .and()
         .build()
   }
+
+//  @Bean
+//  fun springSecurityFilterChain(httpSecurity: ServerHttpSecurity): SecurityWebFilterChain {
+//
+//    return httpSecurity.csrf().disable()
+//        .authorizeExchange()
+//        .pathMatchers("/actuator/**").permitAll()
+//        .and()
+//        .authorizeExchange()
+//        .pathMatchers("/api/**").authenticated()
+//        .anyExchange().authenticated()
+//        .and()
+//        .build()
+//  }
 }
 
