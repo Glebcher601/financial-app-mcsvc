@@ -4,6 +4,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
+  application:
+    name: user-service
 
 server:
   port: 8991
@@ -12,8 +14,6 @@ jdbc:
   connectionPool: 10
 
 management:
-  security:
-    enabled: false
   endpoint:
     metrics:
       enabled: true

@@ -26,6 +26,7 @@ CREATE TABLE USER_PERMISSION (
 
 INSERT INTO PERMISSION (id, key, description) VALUES (1, 'admin_permission', 'Admin permission');
 INSERT INTO PERMISSION (id, key, description) VALUES (2, 'user_permission', 'User permission');
+INSERT INTO PERMISSION (id, key, description) VALUES (3, 'actuator_permission', 'Actuator permission');
 
 INSERT INTO USER (id, login, password, enabled) VALUES (1, 'user1', 'password1', TRUE);
 INSERT INTO USER (id, login, password, enabled) VALUES (2, 'user2', 'password2', TRUE);

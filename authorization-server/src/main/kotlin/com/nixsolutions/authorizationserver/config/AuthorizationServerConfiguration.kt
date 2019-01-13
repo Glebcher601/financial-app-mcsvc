@@ -3,6 +3,7 @@ package com.nixsolutions.authorizationserver.config
 import com.nixsolutions.financial.security.exception.CustomAuthenticationFailureHandler
 import com.nixsolutions.financial.security.exception.JwtAccessDeniedHandler
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.actuate.autoconfigure.security.reactive.EndpointRequest
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
@@ -30,10 +31,14 @@ class AuthorizationServerConfiguration {
     return basicAuthWebFilter
   }
 
+  //TODO special security flow for actuator
   @Bean
   fun authorizationServerFilterChain(httpSecurity: ServerHttpSecurity): SecurityWebFilterChain =
       httpSecurity
           .csrf().disable()
+          .authorizeExchange()
+          .matchers(EndpointRequest.toAnyEndpoint()).permitAll()
+          .and()
           .addFilterAt(basicAuthenticationFilter(), SecurityWebFiltersOrder.HTTP_BASIC)
           .exceptionHandling().accessDeniedHandler(JwtAccessDeniedHandler)
           .and()

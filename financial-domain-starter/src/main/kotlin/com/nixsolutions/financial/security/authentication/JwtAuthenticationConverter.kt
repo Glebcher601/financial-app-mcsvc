@@ -35,7 +35,7 @@ fun extractTokenValue(bearerToken: String?) =
     if (bearerToken.isNullOrBlank()) ""
     else bearerToken?.substring(7, bearerToken.length)
 
-fun toAuthenticationMono(claims: Claims): Mono<Authentication> {
+fun toAuthenticationMono(claims: Claims): Mono<out Authentication> {
   val permissions = claims.get(SecurityConstants.PERMISSIONS, ArrayList::class.java)
       .map { SimpleGrantedAuthority(it.toString()) }
 

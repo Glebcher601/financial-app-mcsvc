@@ -5,6 +5,7 @@ import com.nixsolutions.financial.security.exception.CustomAuthenticationFailure
 import com.nixsolutions.financial.security.exception.JwtAccessDeniedHandler
 import com.nixsolutions.financial.security.properties.SecurityProperties
 import com.nixsolutions.financial.security.properties.SystemJwtAuthenticationHolder
+import org.springframework.boot.actuate.autoconfigure.security.reactive.EndpointRequest
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
@@ -47,11 +48,12 @@ class DefaultJwtAuthorizationConfiguration {
         httpSecurity
             .exceptionHandling()
             .accessDeniedHandler(JwtAccessDeniedHandler)
+            .and().authorizeExchange()
+            .matchers(EndpointRequest.toAnyEndpoint()).hasAuthority("actuator_permission")
             .and()
             .authorizeExchange()
             .and()
             .addFilterAt(bearerAuthenticationFilter, SecurityWebFiltersOrder.AUTHENTICATION))
-
   }
 }
 

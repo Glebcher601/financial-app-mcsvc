@@ -3,6 +3,7 @@ package com.nixsolutions.userservice.endpoint
 import com.nixsolutions.userservice.domain.User
 import com.nixsolutions.userservice.misc.async
 import com.nixsolutions.userservice.repository.UserRepository
+import io.micrometer.core.instrument.MeterRegistry
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -25,6 +26,9 @@ class UserResource {
   }
 
   @Autowired
+  private lateinit var meterRegistry: MeterRegistry;
+
+  @Autowired
   private lateinit var userRepository: UserRepository;
 
   @GetMapping
@@ -39,11 +43,13 @@ class UserResource {
 
   @GetMapping(path = ["/byLogin/{login}"])
   fun getByLogin(@PathVariable login: String): Mono<User> {
-    return async { userRepository.findByLogin(login)!! };
+    meterRegistry.counter("loginRequests").increment(1.0)
+    return async { userRepository.findByLogin(login)!! }
   }
 
   @PostMapping
   fun create(@RequestBody user: User): Mono<User> {
+    meterRegistry.counter("userCreations").increment(1.0)
     return async { userRepository.save(user) }
   }
 

@@ -14,27 +14,10 @@ class WebSecurityConfig {
   fun springSecurityFilterChain(httpSecurityHolder: HttpSecurityConfigurationHolder): SecurityWebFilterChain {
     return httpSecurityHolder.httpSecurity.csrf().disable()
         .authorizeExchange()
-        .matchers(EndpointRequest.toAnyEndpoint()).hasAuthority("ADMIN")
-        .and()
-        .authorizeExchange()
-        .pathMatchers("/api/**").authenticated()
+        .pathMatchers("/api/**").hasAuthority("admin_permission")
         .anyExchange().authenticated()
         .and()
         .build()
   }
-
-//  @Bean
-//  fun springSecurityFilterChain(httpSecurity: ServerHttpSecurity): SecurityWebFilterChain {
-//
-//    return httpSecurity.csrf().disable()
-//        .authorizeExchange()
-//        .pathMatchers("/actuator/**").permitAll()
-//        .and()
-//        .authorizeExchange()
-//        .pathMatchers("/api/**").authenticated()
-//        .anyExchange().authenticated()
-//        .and()
-//        .build()
-//  }
 }
 
