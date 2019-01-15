@@ -4,11 +4,23 @@ spring:
   application:
     name: authorization-server
 
-jdbc:
-  connectionPool: 10
 server:
   port: 8992
 
+management:
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
 
 ---
 
