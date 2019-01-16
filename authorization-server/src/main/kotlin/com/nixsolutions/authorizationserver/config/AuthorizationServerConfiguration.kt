@@ -10,6 +10,7 @@ import org.springframework.boot.actuate.autoconfigure.security.reactive.Endpoint
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
+import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.ReactiveAuthenticationManager
 import org.springframework.security.authentication.UserDetailsRepositoryReactiveAuthenticationManager
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder
@@ -18,6 +19,8 @@ import org.springframework.security.core.userdetails.ReactiveUserDetailsService
 import org.springframework.security.crypto.password.NoOpPasswordEncoder
 import org.springframework.security.web.server.SecurityWebFilterChain
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter
+import org.springframework.security.web.server.authentication.ServerAuthenticationConverter
+import org.springframework.security.web.server.authentication.ServerHttpBasicAuthenticationConverter
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers
 import org.springframework.web.server.ServerWebExchange
 import org.springframework.web.server.WebFilterChain
@@ -40,6 +43,8 @@ class TFilter(authenticationManager: ReactiveAuthenticationManager?) : Authentic
   "com.nixsolutions.financial.security.authentication"])
 class AuthorizationServerConfiguration {
 
+  val actuatorMatcher = EndpointRequest.toAnyEndpoint()
+
   @Autowired
   lateinit var reactiveUserDetailsService: ReactiveUserDetailsService;
 
@@ -48,17 +53,28 @@ class AuthorizationServerConfiguration {
 
   fun tokenAuthenticationFilter(): AuthenticationWebFilter {
     val bearerAuthenticationFilter = TFilter(ReactiveAuthenticationManager(::decideToAuthenticate))
-    bearerAuthenticationFilter.setServerAuthenticationConverter(JwtAuthenticationConverter(jwtVerifier))
     bearerAuthenticationFilter.setAuthenticationFailureHandler(CustomAuthenticationFailureHandler)
+    bearerAuthenticationFilter.setRequiresAuthenticationMatcher(actuatorMatcher);
+    bearerAuthenticationFilter.setServerAuthenticationConverter(JwtAuthenticationConverter(jwtVerifier))
 
     return bearerAuthenticationFilter;
   }
 
   fun basicAuthenticationFilter(): AuthenticationWebFilter {
     val reactiveAuthManager = UserDetailsRepositoryReactiveAuthenticationManager(reactiveUserDetailsService)
+    //TODO bas things happen here
     reactiveAuthManager.setPasswordEncoder(NoOpPasswordEncoder.getInstance())
     val basicAuthWebFilter = BFilter(reactiveAuthManager)
     basicAuthWebFilter.setAuthenticationFailureHandler(CustomAuthenticationFailureHandler)
+    basicAuthWebFilter.setRequiresAuthenticationMatcher(ServerWebExchangeMatchers.pathMatchers("/api/**"))
+
+    val basicAuthenticationConverter = ServerHttpBasicAuthenticationConverter()
+    val serverAuthenticationConverter = ServerAuthenticationConverter { exchange ->
+      basicAuthenticationConverter.convert(exchange)
+          .switchIfEmpty(Mono.error(BadCredentialsException("Wrong authentication type provided")))
+    }
+
+    basicAuthWebFilter.setServerAuthenticationConverter(serverAuthenticationConverter)
 
     return basicAuthWebFilter
   }
