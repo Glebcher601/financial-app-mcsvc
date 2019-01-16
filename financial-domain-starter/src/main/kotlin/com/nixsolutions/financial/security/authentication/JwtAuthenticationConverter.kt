@@ -1,6 +1,7 @@
 package com.nixsolutions.financial.security.authentication
 
 import com.nixsolutions.financial.security.SecurityConstants
+import com.nixsolutions.financial.security.exception.InvalidTokenException
 import com.nixsolutions.financial.security.verifier.JwtVerifier
 import io.jsonwebtoken.Claims
 import org.springframework.http.server.reactive.ServerHttpRequest
@@ -27,8 +28,12 @@ class JwtAuthenticationConverter(val jwtVerifier: JwtVerifier) : ServerAuthentic
 }
 
 fun getJwtFromRequest(request: ServerHttpRequest): String? {
-  val bearerToken = request.headers[SecurityConstants.AUTHORIZATION]?.first { it.startsWith(SecurityConstants.BEARER_TYPE) }
-  return extractTokenValue(bearerToken)
+  try {
+    val bearerToken = request.headers[SecurityConstants.AUTHORIZATION]?.first { it.startsWith(SecurityConstants.BEARER_TYPE) }
+    return extractTokenValue(bearerToken)
+  } catch (ex: Exception) {
+    throw InvalidTokenException("Wrong or empty token ${ex.toString()}")
+  }
 }
 
 fun extractTokenValue(bearerToken: String?) =
@@ -43,5 +48,6 @@ fun toAuthenticationMono(claims: Claims): Mono<out Authentication> {
       .map { UsernamePasswordAuthenticationToken(it, null, permissions) }
 }
 
-fun toErrorAuthentication(ex: AuthenticationException): Mono<Authentication> =
-    Mono.justOrEmpty(UsernamePasswordAuthenticationToken(ex, null, mutableListOf()))
+fun toErrorAuthentication(ex: AuthenticationException): Mono<Authentication> {
+  return Mono.justOrEmpty(UsernamePasswordAuthenticationToken(ex, null, mutableListOf()))
+}
