@@ -22,21 +22,7 @@ import org.springframework.security.web.server.authentication.AuthenticationWebF
 import org.springframework.security.web.server.authentication.ServerAuthenticationConverter
 import org.springframework.security.web.server.authentication.ServerHttpBasicAuthenticationConverter
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers
-import org.springframework.web.server.ServerWebExchange
-import org.springframework.web.server.WebFilterChain
 import reactor.core.publisher.Mono
-
-class BFilter(authenticationManager: ReactiveAuthenticationManager?) : AuthenticationWebFilter(authenticationManager) {
-  override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
-    return super.filter(exchange, chain)
-  }
-}
-
-class TFilter(authenticationManager: ReactiveAuthenticationManager?) : AuthenticationWebFilter(authenticationManager) {
-  override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
-    return super.filter(exchange, chain)
-  }
-}
 
 @Configuration
 @ComponentScan(basePackages = ["com.nixsolutions.financial.security.verifier",
@@ -44,6 +30,8 @@ class TFilter(authenticationManager: ReactiveAuthenticationManager?) : Authentic
 class AuthorizationServerConfiguration {
 
   val actuatorMatcher = EndpointRequest.toAnyEndpoint()
+  val tokenCheckMatcher = ServerWebExchangeMatchers.pathMatchers("/api/**/checkToken")
+  val tokenObtainMatcher = ServerWebExchangeMatchers.pathMatchers("/api/**/obtainToken")
 
   @Autowired
   lateinit var reactiveUserDetailsService: ReactiveUserDetailsService;
@@ -52,7 +40,7 @@ class AuthorizationServerConfiguration {
   lateinit var jwtVerifier: JwtVerifier;
 
   fun tokenAuthenticationFilter(): AuthenticationWebFilter {
-    val bearerAuthenticationFilter = TFilter(ReactiveAuthenticationManager(::decideToAuthenticate))
+    val bearerAuthenticationFilter = AuthenticationWebFilter(ReactiveAuthenticationManager(::decideToAuthenticate))
     bearerAuthenticationFilter.setAuthenticationFailureHandler(CustomAuthenticationFailureHandler)
     bearerAuthenticationFilter.setRequiresAuthenticationMatcher(actuatorMatcher);
     bearerAuthenticationFilter.setServerAuthenticationConverter(JwtAuthenticationConverter(jwtVerifier))
@@ -64,9 +52,9 @@ class AuthorizationServerConfiguration {
     val reactiveAuthManager = UserDetailsRepositoryReactiveAuthenticationManager(reactiveUserDetailsService)
     //TODO bas things happen here
     reactiveAuthManager.setPasswordEncoder(NoOpPasswordEncoder.getInstance())
-    val basicAuthWebFilter = BFilter(reactiveAuthManager)
+    val basicAuthWebFilter = AuthenticationWebFilter(reactiveAuthManager)
     basicAuthWebFilter.setAuthenticationFailureHandler(CustomAuthenticationFailureHandler)
-    basicAuthWebFilter.setRequiresAuthenticationMatcher(ServerWebExchangeMatchers.pathMatchers("/api/**"))
+    basicAuthWebFilter.setRequiresAuthenticationMatcher(tokenObtainMatcher)
 
     val basicAuthenticationConverter = ServerHttpBasicAuthenticationConverter()
     val serverAuthenticationConverter = ServerAuthenticationConverter { exchange ->
@@ -84,12 +72,14 @@ class AuthorizationServerConfiguration {
   fun authorizationServerFilterChain(httpSecurity: ServerHttpSecurity): SecurityWebFilterChain =
       httpSecurity
           .csrf().disable()
-          .authorizeExchange()
-          .matchers(EndpointRequest.toAnyEndpoint()).hasAuthority("actuator_permission")
-          .pathMatchers("/api/**").authenticated()
-          .and()
           .addFilterAt(tokenAuthenticationFilter(), SecurityWebFiltersOrder.AUTHENTICATION)
           .addFilterAt(basicAuthenticationFilter(), SecurityWebFiltersOrder.HTTP_BASIC)
+          .authorizeExchange()
+          /*ACL part*/
+          .matchers(EndpointRequest.toAnyEndpoint()).hasAuthority("actuator_permission")
+          .matchers(tokenObtainMatcher).authenticated()
+          .matchers(tokenCheckMatcher).permitAll()
+          .and()
           .exceptionHandling().accessDeniedHandler(JwtAccessDeniedHandler)
           .and()
           .build()
