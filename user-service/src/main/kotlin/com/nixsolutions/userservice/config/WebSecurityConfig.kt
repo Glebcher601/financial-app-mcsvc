@@ -15,8 +15,8 @@ class WebSecurityConfig {
     return httpSecurityHolder.httpSecurity.csrf().disable()
         .authorizeExchange()
         .pathMatchers("/api/**").hasAuthority("admin_permission")
-        .anyExchange().authenticated()
         .and()
+        .httpBasic().disable()
         .build()
   }
 }

@@ -1,7 +1,6 @@
 package com.nixsolutions.financial.security.authentication
 
 import com.nixsolutions.financial.security.SecurityConstants
-import com.nixsolutions.financial.security.exception.InvalidTokenException
 import com.nixsolutions.financial.security.verifier.JwtVerifier
 import io.jsonwebtoken.Claims
 import org.springframework.http.server.reactive.ServerHttpRequest
@@ -20,34 +19,22 @@ class JwtAuthenticationConverter(val jwtVerifier: JwtVerifier) : ServerAuthentic
 
   override fun convert(exchange: ServerWebExchange): Mono<Authentication> =
       Mono.justOrEmpty(exchange)
-          .map { getJwtFromRequest(it.request) }
-          .map { jwtVerifier.parseToken(it) }
-          .flatMap { toAuthenticationMono(it) }
-          .onErrorResume(AuthenticationException::class, ::toErrorAuthentication)
-          .log()
+          .flatMap { getJwtFromRequest(it.request) }
+          .map { UsernamePasswordAuthenticationToken(it, null) }
 }
 
-fun getJwtFromRequest(request: ServerHttpRequest): String? {
-  try {
-    val bearerToken = request.headers[SecurityConstants.AUTHORIZATION]?.first { it.startsWith(SecurityConstants.BEARER_TYPE) }
-    return extractTokenValue(bearerToken)
-  } catch (ex: Exception) {
-    throw InvalidTokenException("Wrong or empty token ${ex.toString()}")
+fun getJwtFromRequest(request: ServerHttpRequest): Mono<String> {
+  val bearerToken = request.headers[SecurityConstants.AUTHORIZATION]?.first()
+
+  if (bearerToken.isNullOrEmpty()) {
+    return Mono.empty()
   }
+
+  return extractTokenValue(bearerToken.orEmpty())
 }
 
-fun extractTokenValue(bearerToken: String?) =
-    if (bearerToken.isNullOrBlank()) ""
-    else bearerToken?.substring(7, bearerToken.length)
-
-fun toAuthenticationMono(claims: Claims): Mono<out Authentication> {
-  val permissions = claims.get(SecurityConstants.PERMISSIONS, ArrayList::class.java)
-      .map { SimpleGrantedAuthority(it.toString()) }
-
-  return Mono.justOrEmpty(claims.subject)
-      .map { UsernamePasswordAuthenticationToken(it, null, permissions) }
-}
-
-fun toErrorAuthentication(ex: AuthenticationException): Mono<Authentication> {
-  return Mono.justOrEmpty(UsernamePasswordAuthenticationToken(ex, null, mutableListOf()))
+fun extractTokenValue(bearerToken: String): Mono<String> {
+  if (!bearerToken.startsWith("Bearer"))
+    return Mono.empty<String>()
+  return Mono.just(bearerToken.substring(7, bearerToken.length))
 }

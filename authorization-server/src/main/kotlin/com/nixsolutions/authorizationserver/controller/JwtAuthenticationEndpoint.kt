@@ -2,11 +2,11 @@ package com.nixsolutions.authorizationserver.controller
 
 import com.nixsolutions.authorizationserver.security.jwt.JwtTokenProvider
 import com.nixsolutions.authorizationserver.security.payload.JwtTokenResponse
-import com.nixsolutions.financial.security.authentication.extractTokenValue
 import com.nixsolutions.financial.security.verifier.JwtVerifier
 import com.nixsolutions.financial.security.verifier.JwtVerifyResponse
 import com.nixsolutions.financial.security.verifier.errorResponse
 import com.nixsolutions.financial.security.verifier.positiveResponse
+import io.micrometer.core.instrument.MeterRegistry
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.ResponseEntity
@@ -29,6 +29,9 @@ class JwtAuthenticationEndpoint {
   @Autowired
   lateinit var jwtVerifier: JwtVerifier;
 
+  @Autowired
+  lateinit var meterRegistry: MeterRegistry
+
   @PostMapping(path = ["/obtainToken"])
   @PreAuthorize("isAuthenticated()")
   fun obtainToken(@AuthenticationPrincipal authentication: Authentication): Mono<ResponseEntity<JwtTokenResponse>> {
@@ -42,13 +45,19 @@ class JwtAuthenticationEndpoint {
   @PostMapping(path = ["/checkToken"])
   fun checkToken(@RequestHeader(name = "Authorization") auth: String?):
       Mono<ResponseEntity<JwtVerifyResponse>> {
+    meterRegistry.counter("jwtCheck", "status", "requested").increment(1.0)
     return Mono.justOrEmpty(auth)
         .defaultIfEmpty("")
         .map(::extractTokenValue)
         .doOnSuccess { jwtVerifier.parseToken(it) }
         .map { _ -> positiveResponse() }
         .onErrorResume { ex -> Mono.just(errorResponse(ex)) }
+        .doOnError { _ -> meterRegistry.counter("jwtCheck", "status", "failed").increment(1.0)}
   }
+
+  private fun extractTokenValue(bearerToken: String?) =
+      if (bearerToken.isNullOrBlank()) ""
+      else bearerToken?.substring(7, bearerToken.length)
 
   //TODO signup
   fun signUp() = null

@@ -2,7 +2,7 @@ package com.nixsolutions.financial.discovery
 
 import com.nixsolutions.financial.discovery.DiscoveryType.LOCAL
 
-const val STORAGE = "storage"
+const val STORAGE = "storage-service"
 const val UI = "ui"
 const val PREDICTION = "prediction"
 const val USER_AUTH = "authorization-server"

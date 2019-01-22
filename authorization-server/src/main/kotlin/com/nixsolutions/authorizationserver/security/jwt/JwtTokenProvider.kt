@@ -1,10 +1,12 @@
 package com.nixsolutions.authorizationserver.security.jwt
 
 import com.nixsolutions.authorizationserver.security.CustomUserDetails
+import com.nixsolutions.financial.metrics.MeterRegistryAware
 import com.nixsolutions.financial.security.SecurityConstants
 import com.nixsolutions.financial.security.properties.SecurityProperties
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
+import io.micrometer.core.instrument.MeterRegistry
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication
@@ -15,7 +17,8 @@ import java.util.stream.Collectors.toList
 
 
 @Component
-class JwtTokenProvider(@Autowired val securityProperties: SecurityProperties) {
+class JwtTokenProvider(val securityProperties: SecurityProperties,
+                       override var meterRegistry: MeterRegistry): MeterRegistryAware {
 
   private val logger = LoggerFactory.getLogger(JwtTokenProvider::class.java)
 

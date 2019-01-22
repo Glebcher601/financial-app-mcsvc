@@ -10,11 +10,12 @@ import org.springframework.web.server.ServerWebExchange
 import reactor.core.publisher.Mono
 import java.util.*
 
-fun getCustomErrorAttributes(message: String, request: ServerHttpRequest): Map<String, Any> {
+fun getCustomErrorAttributes(message: String, request: ServerHttpRequest, httpStatus: HttpStatus): Map<String, Any> {
   val errorAttributes = HashMap<String, Any>()
   errorAttributes["timestamp"] = Date()
   errorAttributes["message"] = message
-  errorAttributes["status"] = HttpStatus.FORBIDDEN.value()
+  errorAttributes["status"] = httpStatus.value()
+  errorAttributes["error"] = httpStatus.reasonPhrase
   errorAttributes["path"] = request.path.toString()
 
   return errorAttributes;

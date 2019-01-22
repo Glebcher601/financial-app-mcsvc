@@ -2,6 +2,7 @@ package com.nixsolutions.userservice.endpoint
 
 import com.nixsolutions.userservice.domain.User
 import com.nixsolutions.userservice.misc.async
+import com.nixsolutions.userservice.misc.asyncFailsafe
 import com.nixsolutions.userservice.repository.UserRepository
 import io.micrometer.core.instrument.MeterRegistry
 import org.slf4j.LoggerFactory
@@ -33,34 +34,35 @@ class UserResource {
 
   @GetMapping
   fun getAll(): Flux<User> {
-    return async { userRepository.findAll() }.flatMapMany { list -> Flux.fromIterable(list) };
+    return asyncFailsafe { userRepository.findAll() }.flatMapMany { list -> Flux.fromIterable(list) };
   }
 
   @GetMapping(path = ["/{id}"])
   fun getById(@PathVariable id: Long): Mono<User> {
-    return async { userRepository.findById(id).orElseThrow { RuntimeException() } }
+    return asyncFailsafe { userRepository.findById(id).orElseThrow { RuntimeException() } }
   }
 
   @GetMapping(path = ["/byLogin/{login}"])
   fun getByLogin(@PathVariable login: String): Mono<User> {
-    meterRegistry.counter("loginRequests").increment(1.0)
-    return async { userRepository.findByLogin(login)!! }
+    meterRegistry.counter("loginRequests").increment()
+    return asyncFailsafe { userRepository.findByLogin(login)!! }
   }
 
   @PostMapping
   fun create(@RequestBody user: User): Mono<User> {
-    meterRegistry.counter("userCreations").increment(1.0)
-    return async { userRepository.save(user) }
+    meterRegistry.counter("userCreations").increment()
+    return asyncFailsafe { userRepository.save(user) }
   }
 
   @PutMapping
   fun update(@RequestBody user: User): Mono<User> {
-    return async { userRepository.save(user) }
+    meterRegistry.counter("userUpdates").increment()
+    return asyncFailsafe { userRepository.save(user) }
   }
 
   @DeleteMapping(path = ["/{id}"])
   fun deleteById(@PathVariable id: Long): Mono<Unit> {
-    return async { userRepository.deleteById(id) }
+    return asyncFailsafe { userRepository.deleteById(id) }
   }
 
 }

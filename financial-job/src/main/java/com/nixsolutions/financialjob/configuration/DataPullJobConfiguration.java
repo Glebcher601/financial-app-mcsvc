@@ -1,10 +1,12 @@
 package com.nixsolutions.financialjob.configuration;
 
+import com.nixsolutions.financial.metrics.MeterRegistryAware;
 import com.nixsolutions.financialjob.domain.SymbolStockSnapshots;
 import com.nixsolutions.financialjob.job.JobListener;
 import com.nixsolutions.financialjob.job.ListDataSplitter;
 import com.nixsolutions.financialjob.service.DataPullService;
 import com.nixsolutions.financialjob.service.StorageService;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,9 +31,8 @@ import static com.nixsolutions.financialjob.configuration.ApiUrlConfiguration.Ur
 import static com.nixsolutions.financialjob.configuration.ApiUrlConfiguration.UriParams.FUNCTION;
 import static com.nixsolutions.financialjob.configuration.ApiUrlConfiguration.UriParams.INTERVAL;
 
-//TODO Metrics or logs to add
 @Configuration
-public class DataPullJobConfiguration
+public class DataPullJobConfiguration implements MeterRegistryAware
 {
   private static final Logger LOG = LoggerFactory.getLogger(DataPullJobConfiguration.class);
 
@@ -43,6 +44,9 @@ public class DataPullJobConfiguration
 
   @Autowired
   private StorageService storageService;
+
+  @Autowired
+  private MeterRegistry meterRegistry;
 
   @Bean
   public String prefilledTemplateUrl(ApiUrlConfiguration apiProps)
@@ -125,4 +129,18 @@ public class DataPullJobConfiguration
       return gridSize -> listDataSplitter.splitData(newArrayList(apiUrlProps.getSymbols()), gridSize);
     }
   }
+
+  @Override
+  public MeterRegistry getMeterRegistry()
+  {
+    return meterRegistry;
+  }
+
+  @Override
+  public void setMeterRegistry(MeterRegistry meterRegistry)
+  {
+    this.meterRegistry = meterRegistry;
+
+  }
+
 }

@@ -1,10 +1,12 @@
 package com.nixsolutions.financial.security.config
 
 import com.nixsolutions.financial.security.authentication.JwtAuthenticationConverter
+import com.nixsolutions.financial.security.exception.CustomAuthenticationEntryPoint
 import com.nixsolutions.financial.security.exception.CustomAuthenticationFailureHandler
-import com.nixsolutions.financial.security.exception.JwtAccessDeniedHandler
+import com.nixsolutions.financial.security.exception.SecurityExceptionHandler
 import com.nixsolutions.financial.security.properties.SecurityProperties
 import com.nixsolutions.financial.security.properties.SystemJwtAuthenticationHolder
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.actuate.autoconfigure.security.reactive.EndpointRequest
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
@@ -12,6 +14,7 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
 import org.springframework.security.authentication.ReactiveAuthenticationManager
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder
@@ -37,30 +40,34 @@ class CommonJwtSecurityConfiguration
 @Import(CommonJwtSecurityConfiguration::class)
 class DefaultJwtAuthorizationConfiguration {
 
+  @Autowired
+  lateinit var jwtAuthenticationConverter: JwtAuthenticationConverter
+  @Autowired
+  lateinit var jwtReactiveAuthenticationManager: ReactiveAuthenticationManager
+  @Autowired
+  lateinit var customAuthenticationFailureHandler: CustomAuthenticationFailureHandler
+  @Autowired
+  lateinit var securityExceptionHandler: SecurityExceptionHandler
+  @Autowired
+  lateinit var customAuthenticationEntryPoint: CustomAuthenticationEntryPoint
+
   @Bean
-  fun preConfiguredHttpSecurity(httpSecurity: ServerHttpSecurity,
-                                jwtAuthenticationConverter: JwtAuthenticationConverter): HttpSecurityConfigurationHolder {
-    val bearerAuthenticationFilter = AuthenticationWebFilter(ReactiveAuthenticationManager(::decideToAuthenticate))
+  fun preConfiguredHttpSecurity(httpSecurity: ServerHttpSecurity): HttpSecurityConfigurationHolder {
+    val bearerAuthenticationFilter = AuthenticationWebFilter(jwtReactiveAuthenticationManager)
     bearerAuthenticationFilter.setServerAuthenticationConverter(jwtAuthenticationConverter)
-    bearerAuthenticationFilter.setAuthenticationFailureHandler(CustomAuthenticationFailureHandler)
+    bearerAuthenticationFilter.setAuthenticationFailureHandler(customAuthenticationFailureHandler)
 
     return HttpSecurityConfigurationHolder(
         httpSecurity
             .exceptionHandling()
-            .accessDeniedHandler(JwtAccessDeniedHandler)
+            .accessDeniedHandler(securityExceptionHandler)
+            .authenticationEntryPoint(customAuthenticationEntryPoint)
             .and().authorizeExchange()
+            .matchers(EndpointRequest.to("health")).permitAll()
             .matchers(EndpointRequest.toAnyEndpoint()).hasAuthority("actuator_permission")
             .and()
             .authorizeExchange()
             .and()
             .addFilterAt(bearerAuthenticationFilter, SecurityWebFiltersOrder.AUTHENTICATION))
   }
-}
-
-fun decideToAuthenticate(auth: Authentication): Mono<Authentication> {
-  if (auth.principal is AuthenticationException) {
-    return Mono.error(auth.principal as AuthenticationException)
-  }
-
-  return Mono.just(auth);
 }

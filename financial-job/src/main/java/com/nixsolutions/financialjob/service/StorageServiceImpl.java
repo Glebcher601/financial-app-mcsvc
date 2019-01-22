@@ -4,6 +4,8 @@ import com.nixsolutions.financial.discovery.ServiceRegistry;
 import com.nixsolutions.financial.discovery.ServiceRegistryAware;
 import com.nixsolutions.financial.security.properties.SystemJwtAuthenticationHolder;
 import com.nixsolutions.financialjob.domain.SymbolStockSnapshots;
+import io.micrometer.core.annotation.Timed;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -25,6 +27,7 @@ public class StorageServiceImpl implements StorageService, ServiceRegistryAware
   private SystemJwtAuthenticationHolder jwtAuthenticationHolder;
 
   @Override
+  @Timed("pushDuration")
   public void save(SymbolStockSnapshots symbolStockSnapshots)
   {
     final Optional<ClientResponse> clientResponse = jwtAuthenticationHolder

@@ -1,20 +1,22 @@
 package com.nixsolutions.financial.security.exception
 
+import com.nixsolutions.financial.metrics.MeterRegistryAware
+import com.nixsolutions.financial.metrics.requestPathMetrics
+import io.micrometer.core.instrument.MeterRegistry
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.web.server.WebFilterExchange
 import org.springframework.security.web.server.authentication.ServerAuthenticationFailureHandler
+import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
 
-object CustomAuthenticationFailureHandler : ServerAuthenticationFailureHandler {
+@Component
+class CustomAuthenticationFailureHandler(override var meterRegistry: MeterRegistry) :
+    ServerAuthenticationFailureHandler, CustomAuthenticationEntryPoint(meterRegistry), MeterRegistryAware {
   override fun onAuthenticationFailure(webFilters: WebFilterExchange,
                                        exception: AuthenticationException): Mono<Void> {
-    webFilters.exchange.response.statusCode = HttpStatus.FORBIDDEN
-    webFilters.exchange.response.headers.contentType = MediaType.APPLICATION_JSON
-
-    return Mono.just(
-        getCustomErrorAttributes(exception.message ?: "Authentication Exception", webFilters.exchange.request))
-        .flatMap { writeJsonErrorResponse(webFilters.exchange, it) }
+    meterRegistry.counter("authenticationFailed", *requestPathMetrics(webFilters.exchange)).increment()
+    return super.commence(webFilters.exchange, exception)
   }
 }

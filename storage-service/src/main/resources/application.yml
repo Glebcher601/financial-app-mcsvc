@@ -1,8 +1,23 @@
 server:
   port: 8889
 spring:
-  profiles:
-    active: dev
+  application:
+    name: storage-service
+
+management:
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
 
 ---
 
