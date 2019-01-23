@@ -48,7 +48,7 @@ task unpack(type: Copy) {
 }
 
 docker {
-    name 'gcr.io/glebcher9812/storage-service:'+version
+    name 'gcr.io/innate-life-217919/storage-service:'+version
     copySpec.from(tasks.unpack.outputs).into("${explodedJarDir}")
     buildArgs(['EXPLODED_JAR_DIR': "${explodedJarDir}"])
 }
