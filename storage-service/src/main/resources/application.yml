@@ -40,5 +40,5 @@ spring:
         uri: mongodb://storage-mongo:27017/db
 financial-domain:
   security:
-    jwtProps:
+    jwt-props:
       jwtSecret: ${JWT_SECRET}
