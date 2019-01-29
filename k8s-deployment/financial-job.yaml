@@ -12,8 +12,6 @@ spec:
   ports:
   - protocol: TCP
     port: 8888
-    #Dev setup
-    #nodePort: 32143
     name: http
 
 ---
@@ -38,13 +36,17 @@ spec:
           env:
             - name: DEBUG_AGENT
               value: ""
+            - name: JOB_CRON_SCHEDULE
+              value: 0 0/10 * * * ?
           envFrom:
             - configMapRef:
                 name: profile-config
             - secretRef:
                 name: jwt-secret
+            - secretRef:
+                name: system-token-secret
           ports:
-            - containerPort: 8889
+            - containerPort: 8888
           livenessProbe:
             httpGet:
               path: /actuator/health

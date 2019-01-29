@@ -35,11 +35,6 @@ spec:
               claimName: mongo-local-storage-claim
         terminationGracePeriodSeconds: 10
         containers:
-#          - name: mongo-sidecar
-#            image: cvallance/mongo-k8s-sidecar
-#            env:
-#              - name: MONGO_SIDECAR_POD_LABELS
-#                value: "role=mongo"
           - name: mongo
             image: mongo
             ports:

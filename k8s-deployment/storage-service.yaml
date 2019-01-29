@@ -12,8 +12,6 @@ spec:
   ports:
   - protocol: TCP
     port: 8889
-    #Dev setup
-    #nodePort: 32142
     name: http
 
 ---
