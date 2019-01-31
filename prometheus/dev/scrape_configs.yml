@@ -1,15 +1,6 @@
 global:
   scrape_interval:     10s # By default, scrape targets every 15 seconds.
   evaluation_interval: 10s # By default, scrape targets every 15 seconds.
-  # scrape_timeout is set to the global default (10s).
-
-# Load and evaluate rules in this file every 'evaluation_interval' seconds.
-rule_files:
-  # - "first.rules"
-  # - "second.rules"
-
-# A scrape configuration containing exactly one endpoint to scrape:
-# Here it's Prometheus itself.
 scrape_configs:
   - job_name: 'monitoring'
     bearer_token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBQ1RVQVRPUiIsIm5hbWUiOiJhY3R1YXRvciIsInBlcm1pc3Npb25zIjpbImFjdHVhdG9yX3Blcm1pc3Npb24iXSwiaWF0IjoxNTQ1MTI1NDU0LCJleHAiOjk5NDUyMTE4Mjl9.vEus_45E5pi_IPDW5tTffUBYhWbPpyCK5jUoSf_ozBYDXBv7vvPjpQsPiyt6wlZBQ3WdcF-3RY85HEqdf8_I-Q

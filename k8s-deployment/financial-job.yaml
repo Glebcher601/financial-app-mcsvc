@@ -5,6 +5,7 @@ metadata:
   name: financial-job-service
   labels:
     app: financial-job-service
+    monitoring: prometheus
 spec:
   type: ClusterIP
   selector:
@@ -22,6 +23,7 @@ metadata:
   labels:
     app: financial-job
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: financial-job
