@@ -79,7 +79,8 @@ class UserRepositoryTest {
         Arguments.of(
             "update user",
             {
-              val user = User(1, "user1_UPD", "password1_UPD", true, mutableSetOf())
+              val user = User("user1_UPD", "password1_UPD", true, mutableSetOf())
+              user.id = 1
               userRepository.save(user)
               userRepository.findAll()
             },
