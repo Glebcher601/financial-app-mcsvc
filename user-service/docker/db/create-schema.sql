@@ -32,3 +32,5 @@ INSERT INTO PERMISSION (id, `key`, description) VALUES (2, 'user_permission', 'U
 INSERT INTO PERMISSION (id, `key`, description) VALUES (3, 'actuator_permission', 'Actuator permission');
 
 INSERT INTO USER (id, login, password, enabled) VALUES (4, 'admin', 'admin', TRUE);
+
+INSERT INTO USER_PERMISSION (user_id, permission_id) VALUES (4, 1);
