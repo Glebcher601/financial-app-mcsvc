@@ -1,92 +1,71 @@
 package com.nixsolutions.userservice.endpoint
 
+import com.nixsolutions.userservice.domain.JsonUserInfo
 import com.nixsolutions.userservice.domain.User
-import com.nixsolutions.userservice.misc.async
+import com.nixsolutions.userservice.misc.asyncFailsafe
 import com.nixsolutions.userservice.repository.UserRepository
+import io.micrometer.core.instrument.MeterRegistry
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import reactor.core.scheduler.Schedulers
+import java.util.concurrent.Executors
 
 @RestController
-@RequestMapping(path = ["/users"])
+@RequestMapping(path = ["/api/users"])
 class UserResource {
+
+  companion object {
+    val LOG = LoggerFactory.getLogger(UserResource::class.java)
+    private val scheduler = Schedulers.fromExecutor(Executors.newFixedThreadPool(4))
+  }
+
+  @Autowired
+  private lateinit var meterRegistry: MeterRegistry;
 
   @Autowired
   private lateinit var userRepository: UserRepository;
 
   @GetMapping
   fun getAll(): Flux<User> {
-    return async { userRepository.findAll() }.flatMapMany { list -> Flux.fromIterable(list) };
+    return asyncFailsafe { userRepository.findAll() }
+        .flatMapMany { list -> Flux.fromIterable(list) }
+        .subscribeOn(scheduler)
   }
 
   @GetMapping(path = ["/{id}"])
   fun getById(@PathVariable id: Long): Mono<User> {
-    return async { userRepository.findById(id).orElseThrow { RuntimeException() } }
+    return asyncFailsafe { userRepository.findById(id).orElseThrow { RuntimeException() } }
+        .subscribeOn(scheduler)
   }
 
   @GetMapping(path = ["/byLogin/{login}"])
   fun getByLogin(@PathVariable login: String): Mono<User> {
-    return async { userRepository.findByLogin(login)!! };
+    meterRegistry.counter("loginRequests").increment()
+    return asyncFailsafe { userRepository.findByLogin(login)!! }
+        .subscribeOn(scheduler)
   }
 
   @PostMapping
-  fun create(@RequestBody user: User): Mono<User> {
-    return async { userRepository.save(user) }
+  fun create(@RequestBody user: JsonUserInfo): Mono<User> {
+    meterRegistry.counter("userCreations").increment()
+    return asyncFailsafe { userRepository.save(user.toPersistenceEntity()) }
+        .subscribeOn(scheduler)
   }
 
   @PutMapping
-  fun update(@RequestBody user: User): Mono<User> {
-    return async { userRepository.save(user) }
+  fun update(@RequestBody user: JsonUserInfo): Mono<User> {
+    meterRegistry.counter("userUpdates").increment()
+    return asyncFailsafe { userRepository.save(user.toPersistenceEntity()) }
+        .subscribeOn(scheduler)
   }
 
   @DeleteMapping(path = ["/{id}"])
   fun deleteById(@PathVariable id: Long): Mono<Unit> {
-    return async { userRepository.deleteById(id) }
+    return asyncFailsafe { userRepository.deleteById(id) }
+        .subscribeOn(scheduler)
   }
-
-  private fun <T> toResponseMono(mono: Mono<T?>): Mono<ResponseEntity<T>> = mono.map { ResponseEntity.ok(it!!) }
 
 }
-
-/*
-* @RestController
-@RequestMapping(path = ["/users"])
-class UserResource {
-
-  @Autowired
-  private lateinit var userRepository: UserRepository;
-
-  @GetMapping
-  fun getAll(): List<User> {
-    return userRepository.findAll()
-  }
-
-  @GetMapping(path = ["/{id}"])
-  fun getById(@PathVariable id: Long): User {
-    return userRepository.findById(id).orElseThrow { RuntimeException() }
-  }
-
-  @GetMapping(path = ["/byLogin/{login}"])
-  fun getByLogin(@PathVariable login: String): User {
-    return userRepository.findByLogin(login)!!
-  }
-
-  @PostMapping
-  fun create(@RequestBody user: User): User {
-    return userRepository.save(user)
-  }
-
-  @PutMapping
-  fun update(@RequestBody user: User): User {
-    return userRepository.save(user)
-  }
-
-  @DeleteMapping(path = ["/{id}"])
-  fun deleteById(@PathVariable id: Long): ResponseEntity<Unit> {
-    userRepository.deleteById(id)
-    return ResponseEntity.ok().build()
-  }
-
-}*/

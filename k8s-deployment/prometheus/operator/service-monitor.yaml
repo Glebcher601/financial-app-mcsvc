@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: nginx
+spec:
+  selector:
+    matchExpressions:
+      - key: monitoring
+        operator: Exists
+  namespaceSelector:
+    matchNames:
+    - default
+  endpoints:
+  - port: http
+    interval: 15s
+    path: /actuator/metrics
+    bearerTokenFile: "/"

@@ -1,6 +1,8 @@
 package com.nixsolutions.financialjob.job;
 
 import java.util.Date;
+
+import io.micrometer.core.annotation.Timed;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameters;
@@ -23,8 +25,9 @@ public class JobScheduler
   @Autowired
   private Job dataPullJob;
 
+  @Timed(value = "jobDuration")
   @Scheduled(cron = "${job.properties.cron}")
-  public void dailyScheduler() throws Exception
+  public void scheduleJob() throws Exception
   {
     JobParameters jobParameters = new JobParametersBuilder().addDate("dateStarted", new Date())
         .toJobParameters();

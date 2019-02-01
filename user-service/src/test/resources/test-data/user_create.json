@@ -3,42 +3,36 @@
     "id": 1,
     "login": "user1",
     "password": "password1",
-    "enabled": true,
-    "permission": "USER"
+    "enabled": true
   },
   {
     "id": 2,
     "login": "user2",
     "password": "password2",
-    "enabled": true,
-    "permission": "USER"
+    "enabled": true
   },
   {
     "id": 3,
     "login": "user3",
     "password": "password3",
-    "enabled": true,
-    "permission": "USER"
+    "enabled": true
   },
   {
     "id": 4,
     "login": "admin",
     "password": "admin",
-    "enabled": true,
-    "permission": "ADMIN"
+    "enabled": true
   },
   {
     "id": 5,
     "login": "superadmin",
     "password": "superadmin",
-    "enabled": true,
-    "permission": "SUPER_ADMIN"
+    "enabled": true
   },
   {
     "id": 6,
     "login": "user4",
     "password": "user4",
-    "enabled": true,
-    "permission": "USER"
+    "enabled": true
   }
 ]

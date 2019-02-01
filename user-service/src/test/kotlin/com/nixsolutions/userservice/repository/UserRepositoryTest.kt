@@ -3,6 +3,7 @@ package com.nixsolutions.userservice.repository
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.nixsolutions.userservice.domain.User
+import org.junit.Ignore
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.TestInstance
@@ -11,26 +12,21 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.core.io.ClassPathResource
 import org.springframework.jdbc.datasource.init.DatabasePopulatorUtils
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
-import org.springframework.test.web.servlet.MockMvc
 import java.util.stream.Stream
 import javax.sql.DataSource
 
 @ActiveProfiles("test")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith(SpringExtension::class)
-@AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@DataJpaTest
+@Ignore
 class UserRepositoryTest {
-
-  @Autowired
-  private lateinit var mockMvc: MockMvc;
 
   @Autowired
   private lateinit var userRepository: UserRepository;
@@ -83,7 +79,7 @@ class UserRepositoryTest {
         Arguments.of(
             "update user",
             {
-              val user = User("user1_UPD", "password1_UPD", true, "USER")
+              val user = User("user1_UPD", "password1_UPD", true, mutableSetOf())
               user.id = 1
               userRepository.save(user)
               userRepository.findAll()

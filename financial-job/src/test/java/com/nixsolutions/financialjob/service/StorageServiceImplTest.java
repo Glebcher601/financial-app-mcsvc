@@ -1,10 +1,6 @@
 package com.nixsolutions.financialjob.service;
 
-import com.nixsolutions.financial.config.EnableSimpleDiscovery;
-import com.nixsolutions.financial.discovery.ServiceRegistry;
-import com.nixsolutions.financialjob.domain.SymbolStockSnapshots;
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
+import static com.nixsolutions.financial.discovery.ServiceRegistryKt.STORAGE;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Rule;
@@ -18,6 +14,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
+import com.nixsolutions.financial.discovery.ServiceRegistry;
+import com.nixsolutions.financial.discovery.config.EnableSimpleDiscovery;
+import com.nixsolutions.financialjob.domain.SymbolStockSnapshots;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = StorageServiceImplTest.class, initializers = ConfigFileApplicationContextInitializer
@@ -43,7 +44,7 @@ public class StorageServiceImplTest
   {
     serviceRegistry.getServiceDiscoveryProperties().getList()
         .stream()
-        .filter(svcRecord -> StringUtils.equals(svcRecord.getName(), ServiceRegistry.Services.STORAGE))
+        .filter(svcRecord -> StringUtils.equals(svcRecord.getName(), STORAGE))
         .forEach(svcRecord -> svcRecord.setPort(String.valueOf(mockWebServer.getPort())));
 
   }

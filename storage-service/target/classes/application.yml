@@ -1,0 +1,21 @@
+server:
+  port: 8889
+spring:
+  profiles:
+    active: dev
+
+---
+
+spring:
+  profiles: dev
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/db
+
+---
+
+spring:
+  profiles: stage
+  data:
+      mongodb:
+        uri: mongodb://storage-mongo:27017/db

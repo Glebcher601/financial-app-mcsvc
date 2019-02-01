@@ -16,5 +16,4 @@ public class FinancialJobApplicationTests
   public void contextLoads()
   {
   }
-
 }

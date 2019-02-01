@@ -1,22 +1,31 @@
 spring:
   profiles:
     active: dev
+  application:
+    name: authorization-server
 
-jdbc:
-  connectionPool: 10
 server:
   port: 8992
 
+management:
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
 
 ---
 
 spring:
   profiles: dev
-  datasource:
-    url: jdbc:h2:tcp://localhost/~/tokenDB
-    username: sa
-    password: sa
-    driver-class-name: org.h2.Driver
 services:
   list:
     -
@@ -24,21 +33,19 @@ services:
       resolution: LOCAL
       port: 8991
       version: 0.1
-security:
-  jwt:
-    secret: DEV_SECRET
-    expiresIn: 3600000
-
+financial-domain:
+  security:
+    jwt-props:
+      expiresIn: 86400
+      jwtSecret: DEV_SECRET
+    #Not used now
+    passwordHashingStrength: 10
+    systemToken: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJTWVNURU0iLCJuYW1lIjoic3lzdGVtIiwicGVybWlzc2lvbnMiOlsiYWRtaW5fcGVybWlzc2lvbiJdLCJpYXQiOjE1NDUxMjU0NTQsImV4cCI6OTk0NTIxMTgyOX0.gFWogYCpup_qxM1Z7pa_4cVEJQBpHDoMyScMwQWI7lCi7jr4AMdK5_0YSDhYvO2EQVNt9jxJ6G_37yBP2ah0fw
 
 ---
 
 spring:
   profiles: stage
-  datasource:
-      url: jdbc:h2:tcp://tokenDB/~/tokenDB
-      username: ${USER_DB_USERNAME}
-      password: ${USER_DB_PASSWORD}
-      driver-class-name: org.h2.Driver
 services:
   list:
     -
@@ -46,7 +53,13 @@ services:
       resolution: CLUSTER
       port: 8991
       version: 0.1
-security:
-  jwt:
-    secret: ${JWT_SECRET}
-    expiresIn: ${JWT_EXPIRES_IN}
+financial-domain:
+  security:
+    jwt-props:
+      jwtSecret: ${JWT_SECRET}
+      expiresIn: ${JWT_EXPIRES_IN}
+    #Not used now
+    passwordHashingStrength: ${PASSWORD_HASH_STERNGTH}
+    systemToken: ${SYSTEM_JWT_TOKEN}
+
+---

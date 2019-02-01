@@ -1,8 +1,23 @@
 server:
   port: 8889
 spring:
-  profiles:
-    active: dev
+  application:
+    name: storage-service
+
+management:
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
 
 ---
 
@@ -11,6 +26,10 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/db
+financial-domain:
+  security:
+    jwt-props:
+      jwtSecret: DEV_SECRET
 
 ---
 
@@ -19,3 +38,7 @@ spring:
   data:
       mongodb:
         uri: mongodb://storage-mongo:27017/db
+financial-domain:
+  security:
+    jwt-props:
+      jwtSecret: ${JWT_SECRET}

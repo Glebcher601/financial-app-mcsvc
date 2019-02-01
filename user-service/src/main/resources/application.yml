@@ -4,6 +4,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
+  application:
+    name: user-service
 
 server:
   port: 8991
@@ -11,30 +13,50 @@ server:
 jdbc:
   connectionPool: 10
 
+management:
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
 ---
 
 spring:
   profiles: dev
   datasource:
-    url: jdbc:h2:tcp://localhost/~/userDB
+    url: jdbc:h2:tcp://${DEV_HOST_ADDRESS:localhost}/~/userDB
     username: sa
     password: sa
     driver-class-name: org.h2.Driver
+
+financial-domain:
+  security:
+    jwt-props:
+      jwtSecret: DEV_SECRET
+    systemToken: token
 
 ---
 
 spring:
   profiles: stage
   datasource:
-      url: jdbc:h2:tcp://userdb/~/userDB
+      url: jdbc:mysql://userdb:3306/userdb?autoReconnect=true&useSSL=false
       username: ${USER_DB_USERNAME}
       password: ${USER_DB_PASSWORD}
-      driver-class-name: org.h2.Driver
+      driver-class-name: com.mysql.jdbc.Driver
+financial-domain:
+  security:
+    jwt-props:
+      jwtSecret: ${JWT_SECRET}
+    systemToken: ${SYSTEM_JWT_TOKEN}
 
 ---
-
-#spring:
-                       #  profiles: test
-                       #  jpa:
-                       #    hibernate:
-                       #      ddl-auto: create

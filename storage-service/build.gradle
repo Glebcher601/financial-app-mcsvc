@@ -4,21 +4,31 @@ buildscript {
 	}
 	repositories {
 		mavenCentral()
+		maven {
+			url "https://plugins.gradle.org/m2/"
+		}
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath("io.franzbecker:gradle-lombok:1.14")
+		classpath('gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.21.0')
 	}
 }
 
+apply plugin: 'java-library'
+apply plugin: 'io.franzbecker.gradle-lombok'
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'maven'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+apply plugin: 'com.palantir.docker'
 
 group = 'com.nixsolutions'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
+
+def explodedJarDir = "exploded"
 
 repositories {
 	maven { url 'https://jitpack.io' }
@@ -26,16 +36,31 @@ repositories {
 	mavenCentral()
 }
 
+lombok {
+	version = '1.18.4'
+	sha256 = ""
+}
+
+task unpack(type: Copy) {
+    dependsOn bootJar
+    from(zipTree(tasks.bootJar.outputs.files.singleFile))
+    into("build/${explodedJarDir}")
+}
+
+docker {
+    name 'gcr.io/innate-life-217919/storage-service:'+version
+    copySpec.from(tasks.unpack.outputs).into("${explodedJarDir}")
+    buildArgs(['EXPLODED_JAR_DIR': "${explodedJarDir}"])
+}
 
 dependencies {
 	implementation('com.nixsolutions:financial-domain-starter:0.0.1-SNAPSHOT')
-    implementation('org.springframework.boot:spring-boot-starter-actuator')
 	implementation('org.springframework.boot:spring-boot-starter-data-mongodb-reactive')
-	implementation('org.springframework.boot:spring-boot-starter-webflux')
 	runtimeOnly('org.springframework.boot:spring-boot-devtools')
 	compileOnly('org.projectlombok:lombok')
+
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
 	testImplementation('io.projectreactor:reactor-test')
-	testCompile('de.flapdoodle.embed:de.flapdoodle.embed.mongo')
-	testCompile('com.github.sbrannen:spring-test-junit5:1.3.1')
+	testImplementation('de.flapdoodle.embed:de.flapdoodle.embed.mongo')
+	testImplementation('com.github.sbrannen:spring-test-junit5:1.3.1')
 }

@@ -1,0 +1,9 @@
+version: '3'
+services:
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./scrape_configs.yml:/etc/prometheus/prometheus.yml
+    container_name: prometheus
+    ports:
+      - 9090:9090

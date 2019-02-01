@@ -1,0 +1,13 @@
+com\nixsolutions\storageservice\persistence\repository\StockSnapshotRepository.class
+com\nixsolutions\storageservice\misc\mongoinit\MongoSequenceInitializer.class
+com\nixsolutions\storageservice\persistence\repository\SequnceGeneratorAware.class
+com\nixsolutions\storageservice\persistence\repository\StockSnapshotRepositoryCustom.class
+com\nixsolutions\storageservice\resource\StockSnapshotResource.class
+com\nixsolutions\storageservice\persistence\repository\impl\StockSnapshotRepositoryCustomImpl.class
+com\nixsolutions\storageservice\domain\SymbolStockSnapshots.class
+com\nixsolutions\storageservice\misc\mongoinit\impl\DevSetupMongoSequenceInitializer.class
+com\nixsolutions\storageservice\StorageServiceApplication.class
+com\nixsolutions\storageservice\persistence\MongoSequence.class
+com\nixsolutions\storageservice\domain\StockSnapshot.class
+com\nixsolutions\storageservice\persistence\DbSequenceService.class
+com\nixsolutions\storageservice\persistence\IdGenService.class

@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-scrape-config
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval:     10s # By default, scrape targets every 15 seconds.
+      evaluation_interval: 10s # By default, scrape targets every 15 seconds.
+    scrape_configs:
+      - job_name: 'monitoring'
+        bearer_token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBQ1RVQVRPUiIsIm5hbWUiOiJhY3R1YXRvciIsInBlcm1pc3Npb25zIjpbImFjdHVhdG9yX3Blcm1pc3Npb24iXSwiaWF0IjoxNTQ1MTI1NDU0LCJleHAiOjk5NDUyMTE4Mjl9.vEus_45E5pi_IPDW5tTffUBYhWbPpyCK5jUoSf_ozBYDXBv7vvPjpQsPiyt6wlZBQ3WdcF-3RY85HEqdf8_I-Q
+        metrics_path: '/actuator/prometheus'
+        static_configs:
+          - targets: [
+          'user-service:8991',
+          'authorization-service:8992',
+          'financial-job-service:8888',
+          'storage-service:8889']

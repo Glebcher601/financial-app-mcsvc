@@ -5,26 +5,31 @@ buildscript {
 	}
 	repositories {
 		mavenCentral()
+		gradlePluginPortal()
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
 		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
 		classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
 		classpath("org.jetbrains.kotlin:kotlin-noarg:${kotlinVersion}")
+		classpath('gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.21.0')
 	}
 }
 
+apply plugin: 'java-library'
 apply plugin: 'maven'
 apply plugin: 'kotlin'
 apply plugin: 'kotlin-spring'
 apply plugin: 'kotlin-jpa'
-apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+apply plugin: 'com.palantir.docker'
 
 group = 'com.nixsolutions'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
+def explodedJarDir = "exploded"
+
 compileKotlin {
 	kotlinOptions {
 		freeCompilerArgs = ["-Xjsr305=strict"]
@@ -38,6 +43,18 @@ compileTestKotlin {
 	}
 }
 
+task unpack(type: Copy) {
+	dependsOn bootJar
+	from(zipTree(tasks.bootJar.outputs.files.singleFile))
+	into("build/${explodedJarDir}")
+}
+
+docker {
+	name 'gcr.io/innate-life-217919/user-service:'+version
+	copySpec.from(tasks.unpack.outputs).into("${explodedJarDir}")
+    buildArgs(['EXPLODED_JAR_DIR': "${explodedJarDir}"])
+}
+
 repositories {
 	mavenCentral()
 	maven { url 'https://jitpack.io' }
@@ -46,15 +63,17 @@ repositories {
 
 
 dependencies {
+	implementation('com.nixsolutions:financial-domain-starter:0.0.1-SNAPSHOT')
 	implementation('org.springframework.boot:spring-boot-starter-actuator')
 	implementation('org.springframework.boot:spring-boot-starter-data-jpa')
-	//implementation('org.springframework.boot:spring-boot-starter-web')
-	implementation('org.springframework.boot:spring-boot-starter-webflux')
 	implementation('com.fasterxml.jackson.module:jackson-module-kotlin')
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
+
 	runtimeOnly('org.springframework.boot:spring-boot-devtools')
 	runtimeOnly('com.h2database:h2')
+	runtime 'mysql:mysql-connector-java:5.1.47'
+
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
 	testImplementation('io.projectreactor:reactor-test')
 	testCompile('com.github.sbrannen:spring-test-junit5:1.3.1')

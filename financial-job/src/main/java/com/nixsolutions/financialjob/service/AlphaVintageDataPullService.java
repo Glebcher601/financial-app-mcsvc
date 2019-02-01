@@ -1,7 +1,20 @@
 package com.nixsolutions.financialjob.service;
 
-import static com.nixsolutions.financialjob.misc.ThrowingFunction.uncheckedFn;
-import static java.util.Spliterator.ORDERED;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.nixsolutions.financialjob.domain.StockSnapshotAlphaVantage;
+import com.nixsolutions.financialjob.domain.SymbolStockSnapshots;
+import com.nixsolutions.financialjob.misc.ThrowingFunction;
+import io.micrometer.core.annotation.Timed;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpMethod;
+import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.UriComponentsBuilder;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -14,19 +27,9 @@ import java.util.Optional;
 import java.util.Spliterators;
 import java.util.TimeZone;
 import java.util.stream.StreamSupport;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpMethod;
-import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.util.UriComponentsBuilder;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.nixsolutions.financialjob.domain.StockSnapshotAlphaVantage;
-import com.nixsolutions.financialjob.domain.SymbolStockSnapshots;
-import com.nixsolutions.financialjob.misc.ThrowingFunction;
+
+import static com.nixsolutions.financialjob.misc.ThrowingFunction.uncheckedFn;
+import static java.util.Spliterator.ORDERED;
 
 @Service
 public class AlphaVintageDataPullService implements DataPullService
@@ -45,6 +48,7 @@ public class AlphaVintageDataPullService implements DataPullService
   }
 
   @Override
+  @Timed(value = "pullDuration")
   public SymbolStockSnapshots pullSnapshotsForSymbol(String symbol)
   {
     String uriString = UriComponentsBuilder.fromHttpUrl(templateUri)

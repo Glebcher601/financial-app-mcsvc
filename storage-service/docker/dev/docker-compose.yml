@@ -1,16 +1,20 @@
 version: '2'
 services:
-  mongo:
+  storage-mongo:
     image: mongo:latest
-    container_name: mongo
+    container_name: storage-mongo
     ports:
       - 27017:27017
+    volumes:
+      - financial-data:/data/db
   mongo-express:
         restart: always
         depends_on:
-          - mongo
+          - storage-mongo
         image: mongo-express:latest
         ports:
           - 8081:8081
         links:
-          - mongo:mongo
+          - storage-mongo:mongo
+volumes:
+  financial-data:

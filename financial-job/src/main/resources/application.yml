@@ -14,10 +14,27 @@ job:
 server:
   port: 8888
 
+management:
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
 spring:
   batch:
     job:
       enabled: false
+  application:
+    name: financial-job
 
 ---
 
@@ -25,15 +42,20 @@ spring:
   profiles: dev
 job:
   properties:
-    cron: 0 0/1 * * * ?
+    cron: 0 0/4 * * * ?
     threads: 1
 services:
   list:
     -
-      name: storage
+      name: storage-service
       resolution: LOCAL
       port: 8889
       version: 0.1
+financial-domain:
+  security:
+    jwt-props:
+      jwtSecret: DEV_SECRET
+    systemToken: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJTWVNURU0iLCJuYW1lIjoic3lzdGVtIiwicGVybWlzc2lvbnMiOlsiYWRtaW5fcGVybWlzc2lvbiJdLCJpYXQiOjE1NDUxMjU0NTQsImV4cCI6OTk0NTIxMTgyOX0.gFWogYCpup_qxM1Z7pa_4cVEJQBpHDoMyScMwQWI7lCi7jr4AMdK5_0YSDhYvO2EQVNt9jxJ6G_37yBP2ah0fw
 
 ---
 
@@ -41,12 +63,17 @@ spring:
   profiles: stage
 job:
   properties:
-    cron: 0 0 12 * * *
+    cron: ${JOB_CRON_SCHEDULE:0 0 12 * * *}
     threads: 4
 services:
   list:
     -
-      name: storage
+      name: storage-service
       resolution: CLUSTER
       port: 8889
       version: 0.1
+financial-domain:
+  security:
+    jwt-props:
+      jwtSecret: ${JWT_SECRET}
+    systemToken: ${SYSTEM_JWT_TOKEN}
