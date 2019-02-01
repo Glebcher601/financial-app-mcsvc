@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.function.Predicate;
 
 @Component
-@Profile("dev")
 public class DevSetupMongoSequenceInitializer implements MongoSequenceInitializer
 {
   private final MongoTemplate mongoTemplate;
